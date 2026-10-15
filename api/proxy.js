@@ -87,7 +87,7 @@ const proxy = http.createServer((req, res) => {
                 // Impostare il Cookie come Secure quando va in prod
                 res.writeHead(201, {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': 'http://127.0.0.1:5500',
+                    'Access-Control-Allow-Origin': 'https://www.choreflow.it',
                     'Access-Control-Allow-Credentials': 'true',
                     'Set-Cookie': `authToken=${generateJWT(data)}; Path=/; SameSite=Lax; HttpOnly; Max-Age=2592000; Secure;`
                 });
