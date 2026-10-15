@@ -1,0 +1,21 @@
+{
+  "name": "choreflow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node ../api/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "dotenv": "^18.0.4",
+    "http": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.23.0",
+    "url": "^0.11.4"
+  }
+}

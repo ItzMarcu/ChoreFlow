@@ -1,0 +1,16 @@
+{
+    "name": "ChoreFlow - L'app per i coinquilini",
+    "short_name": "ChoreFlow",
+    "start_url": "/#login",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#090c07",
+    "theme_color": "#090c07",
+    "icons": [
+        {
+            "src": "/favicon.ico",
+            "size": "192x192",
+            "type": "image/ico" 
+        }
+    ]
+}

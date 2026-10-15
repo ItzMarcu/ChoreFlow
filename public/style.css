@@ -1,0 +1,931 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Merriweather:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ==========================================================================
+   1. Design Tokens & Custom Properties
+   ========================================================================== */
+:root {
+  --color-bg:        #090c07;
+  --color-text:      #e8f2e1;
+  --color-primary:   #65a30d;
+  --color-secondary: #96cd63;
+  --color-accent:    #578f00;
+
+  --surface-card-base:   #11170e;
+  --surface-glass:       rgba(9, 12, 7, 0.72);
+  --border-subtle:       rgba(232, 242, 225, 0.08);
+  --border-card:         rgba(232, 242, 225, 0.14);
+  --border-focus:        rgba(150, 205, 99, 0.35);
+
+  --font-heading: 'Inter', sans-serif;
+  --font-body:    'Merriweather', serif;
+
+  --weight-heading: 700;
+  --weight-body:    400;
+
+  --text-xs:   12.00px;
+  --text-sm:   14.00px;
+  --text-base: 16px;
+  --text-lg:   20.00px;
+  --text-xl:   25.00px;
+  --text-2xl:  31.25px;
+  --text-3xl:  39.06px;
+  --text-4xl:  48.83px;
+
+  --leading-body:    1.65;
+  --leading-heading: 1.15;
+  --tracking-body:   0em;
+  --tracking-heading: -0.02em;
+
+  --container-max-w: 640px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+}
+
+/* ==========================================================================
+   2. Global Resets & Body Setup
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+  padding: 24px 20px 110px;
+  max-width: var(--container-max-w);
+  margin-inline: auto;
+  min-height: 100vh;
+}
+
+body.hide-navbar .navbar {
+  display: none !important;
+}
+
+body.auth-page {
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   3. Typography Styles
+   ========================================================================== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-heading);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+  color: var(--color-text);
+}
+
+h1 { font-size: var(--text-4xl); }
+h2 { font-size: var(--text-3xl); }
+h3 { font-size: var(--text-xl); }
+h4 { font-size: var(--text-lg); }
+h5 { font-size: var(--text-base); }
+small { font-size: var(--text-sm); }
+
+/* ==========================================================================
+   4. Hero Section (.greet & .overview)
+   ========================================================================== */
+.greet,
+.overview {
+  background: 
+    radial-gradient(circle at 15% 20%, rgba(101, 163, 13, 0.18), transparent 55%),
+    linear-gradient(145deg, rgba(87, 143, 0, 0.22) 0%, rgba(101, 163, 13, 0.08) 60%, rgba(9, 12, 7, 0.4) 100%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.45);
+}
+
+.greet h1,
+.overview h1 {
+  font-size: var(--text-3xl);
+  margin-bottom: 8px;
+}
+
+.greet h3,
+.overview h3 {
+  font-size: var(--text-base);
+  font-weight: 400;
+  color: rgba(232, 242, 225, 0.85);
+  margin-top: 6px;
+}
+
+.greet h3 strong,
+.overview h3 strong {
+  font-family: var(--font-heading);
+  color: var(--color-secondary);
+  font-weight: 700;
+  text-transform: capitalize;
+  letter-spacing: 0.01em;
+}
+
+/* ==========================================================================
+   5. Sections Layout
+   ========================================================================== */
+section {
+  margin-bottom: 32px;
+}
+
+section > h3 {
+  font-size: var(--text-base);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(232, 242, 225, 0.6);
+  margin-bottom: 14px;
+}
+
+.todo-checklist,
+.trash-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ==========================================================================
+   6. Cards (Todo, Trash, Tobuy, Cost)
+   ========================================================================== */
+.todo-card,
+.trash-card,
+.tobuy-card,
+.cost-card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(232, 242, 225, 0.07) 0%, rgba(232, 242, 225, 0.03) 100%), var(--surface-card-base);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  box-shadow: 
+    0 4px 16px -2px rgba(0, 0, 0, 0.6),
+    0 1px 3px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(232, 242, 225, 0.1);
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.todo-card::before,
+.trash-card::before,
+.tobuy-card::before,
+.cost-card:not(:has(> h3:only-child))::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--color-primary);
+  opacity: 0.8;
+  transition: width 0.18s ease, opacity 0.18s ease;
+}
+
+.trash-card::before,
+.cost-card:not(:has(> h3:only-child))::before {
+  background-color: var(--color-secondary);
+}
+
+.todo-card:hover,
+.trash-card:hover,
+.tobuy-card:hover,
+.cost-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-focus);
+  box-shadow: 
+    0 8px 24px -4px rgba(0, 0, 0, 0.7),
+    0 0 12px -2px rgba(101, 163, 13, 0.2),
+    inset 0 1px 0 rgba(232, 242, 225, 0.2);
+}
+
+.todo-card label,
+.trash-card label,
+.tobuy-card > label,
+.cost-card > label {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px 18px 22px;
+  width: 100%;
+}
+
+.todo-card label h3,
+.trash-card label h3,
+.tobuy-card > label h3,
+.cost-card > label h3 {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+  flex: 1;
+}
+
+/* ==========================================================================
+   7. Onboarding / Empty States unificati
+   ========================================================================== */
+.todo-start-helper,
+.trash-checklist:has(> button),
+.grocery-start-helper,
+.cost-start-helper,
+.cost-card:has(> h3:only-child) {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 16px !important;
+  padding: 32px 24px !important;
+  text-align: center !important;
+  background-color: rgba(232, 242, 225, 0.02) !important;
+  border: 1px dashed rgba(232, 242, 225, 0.18) !important;
+  border-radius: var(--radius-md) !important;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.todo-start-helper:hover,
+.trash-checklist:has(> button):hover,
+.grocery-start-helper:hover,
+.cost-start-helper:hover,
+.cost-card:has(> h3:only-child):hover {
+  background-color: rgba(232, 242, 225, 0.04) !important;
+  border-color: rgba(150, 205, 99, 0.4) !important;
+}
+
+.todo-start-helper h3,
+.cost-start-helper h3,
+.trash-checklist:has(> button) > h3,
+.grocery-start-helper h3,
+.cost-card:has(> h3:only-child) h3 {
+  font-family: var(--font-heading) !important;
+  font-size: var(--text-base) !important;
+  font-weight: 500 !important;
+  color: rgba(232, 242, 225, 0.85) !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  margin: 0 !important;
+}
+
+/* Bottoni di azione negli empty state */
+.todo-start-helper button,
+.trash-checklist:has(> button) > button,
+#add-grocery,
+#add-cost {
+  appearance: none !important;
+  border: none !important;
+  outline: none !important;
+  cursor: pointer !important;
+
+  font-family: var(--font-heading) !important;
+  font-size: var(--text-sm) !important;
+  font-weight: 600 !important;
+  color: #090c07 !important;
+
+  background-color: var(--color-primary) !important;
+  padding: 10px 22px !important;
+  border-radius: var(--radius-sm) !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+
+  box-shadow: 0 4px 14px rgba(101, 163, 13, 0.35) !important;
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.todo-start-helper button:hover,
+.trash-checklist:has(> button) > button:hover,
+#add-grocery:hover,
+#add-cost:hover {
+  background-color: var(--color-secondary) !important;
+  box-shadow: 0 6px 18px rgba(150, 205, 99, 0.45) !important;
+  transform: translateY(-1px);
+}
+
+.todo-start-helper button:active,
+.trash-checklist:has(> button) > button:active,
+#add-grocery:active,
+#add-cost:active {
+  transform: translateY(0) scale(0.97) !important;
+  box-shadow: 0 2px 8px rgba(101, 163, 13, 0.3) !important;
+}
+
+/* ==========================================================================
+   8. Autenticazione (Login / Register)
+   ========================================================================== */
+.auth-container {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+body.auth-page h1 {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  letter-spacing: var(--tracking-heading);
+  text-align: left;
+  background: linear-gradient(135deg, var(--color-text) 30%, var(--color-secondary) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fadeInDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+body.auth-page form {
+  width: 100%;
+  background: linear-gradient(180deg, rgba(232, 242, 225, 0.07) 0%, rgba(232, 242, 225, 0.03) 100%), var(--surface-card-base);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  padding: 36px 28px;
+  box-shadow: 
+    0 12px 36px -4px rgba(0, 0, 0, 0.7),
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(232, 242, 225, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+body.auth-page form label {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: rgba(232, 242, 225, 0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+body.auth-page form input[type="text"],
+body.auth-page form input[type="password"] {
+  width: 100%;
+  background: rgba(9, 12, 7, 0.6);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+body.auth-page form input[type="text"]:focus,
+body.auth-page form input[type="password"]:focus {
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 12px -2px rgba(101, 163, 13, 0.3);
+  background: rgba(9, 12, 7, 0.9);
+}
+
+body.auth-page #login-button {
+  appearance: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  margin-top: 8px;
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: #090c07;
+  background-color: var(--color-primary);
+  padding: 14px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(101, 163, 13, 0.4);
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+body.auth-page #login-button:hover {
+  background-color: var(--color-secondary);
+  box-shadow: 0 6px 20px rgba(150, 205, 99, 0.5);
+  transform: translateY(-1px);
+}
+
+body.auth-page form p {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  text-align: center;
+  color: rgba(232, 242, 225, 0.6);
+  margin-top: 8px;
+}
+
+body.auth-page form p a {
+  color: var(--color-secondary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+body.auth-page form p a:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   9. Navbar (Glassmorphism)
+   ========================================================================== */
+.navbar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  max-width: calc(var(--container-max-w) - 40px);
+  height: 68px;
+  background: var(--surface-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 12px;
+  z-index: 1000;
+}
+
+.navbar a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  color: rgba(232, 242, 225, 0.5);
+  text-decoration: none;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.navbar a:hover {
+  color: var(--color-secondary);
+  background-color: rgba(232, 242, 225, 0.05);
+}
+
+.navbar a svg {
+  stroke-width: 2.2px;
+}
+
+.navbar a.active {
+  color: var(--color-secondary);
+  background-color: rgba(150, 205, 99, 0.35);
+}
+/* ==========================================================================
+   10. Onboarding View (#onboarding)
+   ========================================================================== */
+/* hidden utility */
+.hidden {
+  display: none !important;
+}
+
+/* Transizione di fade in */
+.fade-in {
+  animation: fadeInStep 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInStep {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Layout e spaziatura generale */
+.onboarding-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  margin-top: 18px;
+}
+
+/* Titolo principale: compatto e proporzionato su mobile */
+h1:has(+ h2),
+.onboarding-container ~ h1,
+body > h1:first-child {
+  font-size: var(--text-2xl); /* ~31px invece di 49px */
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, var(--color-text) 30%, var(--color-secondary) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Sottotitolo descrittivo */
+h1 + h2 {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(232, 242, 225, 0.7);
+  margin-bottom: 8px;
+}
+
+/* Card di scelta */
+.create-house-card,
+.join-house-card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(232, 242, 225, 0.07) 0%, rgba(232, 242, 225, 0.03) 100%), var(--surface-card-base);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  padding: 20px 18px; /* padding ridotto per mobile */
+  box-shadow: 
+    0 8px 24px -4px rgba(0, 0, 0, 0.6),
+    0 2px 6px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(232, 242, 225, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+
+.create-house-card:hover,
+.join-house-card:hover {
+  border-color: var(--border-focus);
+}
+
+.create-house-card h1,
+.join-house-card h1 {
+  font-size: var(--text-lg); /* ~20px per il titolo della card */
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+  -webkit-text-fill-color: initial; /* evita gradienti involontari */
+}
+
+.create-house-card p,
+.join-house-card p {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: rgba(232, 242, 225, 0.7);
+  line-height: 1.5;
+  margin: 0 0 6px 0;
+}
+
+/* Bottoni */
+#create-house,
+#join-house {
+  appearance: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Bottone primario (Crea) */
+#create-house {
+  background-color: var(--color-primary);
+  color: #090c07;
+  box-shadow: 0 4px 14px rgba(101, 163, 13, 0.35);
+}
+
+#create-house:active {
+  transform: scale(0.98);
+}
+
+/* Bottone secondario (Entra) */
+#join-house {
+  background-color: rgba(232, 242, 225, 0.05);
+  color: var(--color-text);
+  border: 1px solid var(--border-card);
+}
+
+#join-house:active {
+  transform: scale(0.98);
+}
+
+/* ==========================================================================
+   Onboarding Steps: Create & Join Forms (Stile Unificato)
+   ========================================================================== */
+#onboarding-step-create,
+#onboarding-step-join {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+#onboarding-step-create .btn-back,
+#onboarding-step-join .btn-back {
+  align-self: flex-start;
+  appearance: none;
+  background: none;
+  border: none;
+  color: rgba(232, 242, 225, 0.6);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 0;
+  margin-bottom: 8px;
+  transition: color 0.15s ease;
+}
+
+#onboarding-step-create .btn-back:hover,
+#onboarding-step-join .btn-back:hover {
+  color: var(--color-secondary);
+}
+
+#onboarding-step-create h1,
+#onboarding-step-join h1 {
+  font-size: var(--text-2xl);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--color-text) 30%, var(--color-secondary) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+}
+
+#onboarding-step-create p,
+#onboarding-step-join p {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: rgba(232, 242, 225, 0.7);
+  line-height: var(--leading-body);
+  margin-bottom: 8px;
+}
+
+#onboarding-step-create .form-group,
+#onboarding-step-join .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+#onboarding-step-create label,
+#onboarding-step-join label {
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: rgba(232, 242, 225, 0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Stile comune input */
+#onboarding-step-create input[type="text"],
+#onboarding-step-join input[type="text"] {
+  width: 100%;
+  background: rgba(9, 12, 7, 0.65);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  outline: none;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+#onboarding-step-create input[type="text"]:focus,
+#onboarding-step-join input[type="text"]:focus {
+  border-color: var(--color-secondary);
+  background: rgba(9, 12, 7, 0.9);
+  box-shadow: 0 0 16px -2px rgba(101, 163, 13, 0.35);
+}
+
+#onboarding-step-create input[type="text"]::placeholder,
+#onboarding-step-join input[type="text"]::placeholder {
+  color: rgba(232, 242, 225, 0.35);
+}
+
+/* Formattazione codice maiuscolo per il join */
+#onboarding-step-join input[type="text"] {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+/* Bottoni di invio */
+#submit-create-house,
+#submit-join-house {
+  appearance: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px 20px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary);
+  color: #090c07;
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(101, 163, 13, 0.4);
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#submit-create-house:hover,
+#submit-join-house:hover {
+  background-color: var(--color-secondary);
+  box-shadow: 0 6px 20px rgba(150, 205, 99, 0.5);
+  transform: translateY(-1px);
+}
+
+#submit-create-house:active,
+#submit-join-house:active {
+  transform: scale(0.98);
+}
+
+/* ==========================================================================
+   Settings View
+   ========================================================================== */
+.settings-view {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: fadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Titolo principale */
+.settings-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+  background: linear-gradient(135deg, var(--color-text) 30%, var(--color-secondary) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Wrapper lista voci */
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Card impostazione (clickable) */
+.settings-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(18, 24, 15, 0.7);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  cursor: pointer;
+  user-select: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.settings-container:hover {
+  background: rgba(28, 38, 23, 0.85);
+  border-color: rgba(101, 163, 13, 0.45);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.settings-container:active {
+  transform: scale(0.99);
+}
+
+/* Contenuto testuale interno */
+.settings-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settings-item-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+}
+
+.settings-container p,
+.settings-item-desc {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: rgba(232, 242, 225, 0.65);
+  line-height: 1.4;
+}
+
+/* Freccia di navigazione a destra */
+.settings-arrow {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: rgba(232, 242, 225, 0.4);
+  transition: color 0.2s ease, transform 0.2s ease;
+  margin-left: 12px;
+}
+
+.settings-container:hover .settings-arrow {
+  color: var(--color-secondary);
+  transform: translateX(3px);
+}
+
+/* ==========================================================================
+   404 Page Styles & Contact Button
+   ========================================================================== */
+#contact-us {
+  appearance: none;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  display: inline;
+  padding: 0;
+  margin: 0;
+
+  font-family: var(--font-heading);
+  font-size: inherit;
+  font-weight: 600;
+  color: var(--color-secondary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: rgba(150, 205, 99, 0.4);
+
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+#contact-us:hover {
+  color: var(--color-primary);
+  text-decoration-color: var(--color-primary);
+}
+
+#contact-us:active {
+  color: var(--color-accent);
+}
+
+.btn-back {
+  align-self: flex-start;
+  appearance: none;
+  background: none;
+  border: none;
+  color: rgba(232, 242, 225, 0.6);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 0;
+  margin-bottom: 8px;
+  transition: color 0.15s ease;
+}
+
+.btn-back:hover {
+  color: var(--color-secondary);
+}
