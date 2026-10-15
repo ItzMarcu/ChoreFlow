@@ -2,7 +2,7 @@
   "name": "choreflow",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "api/index.js",
   "type": "module",
   "scripts": {
     "test": "node ../api/index.js"
