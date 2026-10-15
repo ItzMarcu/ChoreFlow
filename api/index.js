@@ -24,7 +24,11 @@ function log(method, path) {
     console.log(`${new Date().toISOString()}: method = ${method} path = ${path}`);
 }
 
-const server = http.createServer((req, res) => {
+function generateJWT(payload) {
+    return jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: '720h'});
+}
+
+export default async function handler(req, res) {
     if (req.method !== 'GET' && req.method !== 'POST') {
         res.writeHead(405, {'Content-Type': 'application/json'});
         res.end(JSON.stringify({error: 'Metodo non consentito'}));
@@ -37,30 +41,46 @@ const server = http.createServer((req, res) => {
 
     log(method, path);
 
-    if (req.headers['api-key'] !== process.env.SERVER_API_KEY) {
-        res.writeHead(401, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify({error: 'Non autorizzato'}));
+    if (method == 'POST' && endpoint_path == '/auth') {
+        let body = ''
+        req.on('data', chunk => body += chunk)
+        req.on('end', () => {
+            fetch (serverUrl, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'api-key': API_KEY
+                },
+                body: body
+            })
+
+            .then(async response => {
+                const status_code = response.status;
+                const data = await response.json();
+
+                if (!response.ok) {
+                    res.end(JSON.stringify({error: data.message}));
+                    return;
+                }
+
+                // Impostare il Cookie come Secure quando va in prod
+                res.writeHead(201, {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': 'https://www.choreflow.it',
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Set-Cookie': `authToken=${generateJWT(data)}; Path=/; SameSite=Lax; HttpOnly; Max-Age=2592000; Secure;`
+                });
+                res.end(JSON.stringify(data));
+                return;
+            });
+        });
         return;
     }
 
-    if (method == 'POST' && path == '/auth') {
-        let body = '';
-        req.on('data', chunk => body += chunk);
-        req.on('end', async () => {
-            const { nome, password } = JSON.parse(body);
-            console.log(`nome: ${nome}, password: ${password}`);
-            const response = await login(nome, password);
-
-            if (!response.succes) {
-                res.writeHead(401, {'content-type': 'application/json'});
-                res.end(JSON.stringify(response));
-                return;
-            }
-
-            res.writeHead(200, {'content-type': 'application/json'});
-            res.end(JSON.stringify(response));
-            return;
-        });
+    if (!req.headers['cookie']) {
+        res.writeHead(401, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({error: 'Non autorizzato'}));
         return;
     }
 
@@ -242,6 +262,4 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({error: 'Percorso non trovato'}));
         return;
     }
-});
-
-server.listen(process.env.SERVER_PORT, process.env.SERVER_HOST, () => {console.log(process.env.SERVER_PORT)});
+}
