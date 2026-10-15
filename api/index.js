@@ -15,7 +15,7 @@ from './db.js';
 
 // node.js modules 
 import dotenv from 'dotenv';
-import http from 'http';
+import jwt from 'jsonwebtoken';
 import url from 'url';
 
 dotenv.config();
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
 
     log(method, path);
 
-    if (method == 'POST' && endpoint_path == '/auth') {
+    if (method == 'POST' && path == '/auth') {
         let body = ''
         req.on('data', chunk => body += chunk)
         req.on('end', () => {
@@ -257,9 +257,9 @@ export default async function handler(req, res) {
         return;
     }
 
-    else {
-        res.writeHead(400, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify({error: 'Percorso non trovato'}));
-        return;
-    }
+
+    res.writeHead(400, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify({error: 'Percorso non trovato'}));
+    return;
+    
 }
