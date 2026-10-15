@@ -1,1 +1,1 @@
-export const PROXY_URL = "http://127.0.0.1:8010";
+export const PROXY_URL = "https://www.choreflow.it";
