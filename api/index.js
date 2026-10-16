@@ -10,13 +10,12 @@ import {
     login,
     create_room,
     delete_room
-    }
-from './db.js';
+} from './db.js';
 
 // node.js modules 
 import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
 import url from 'url';
+import jwt from 'jsonwebtoken';
 
 dotenv.config();
 
@@ -25,13 +24,31 @@ function log(method, path) {
 }
 
 function generateJWT(payload) {
-    return jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: '720h'});
+    return jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: '720h' });
+}
+
+// Estrae e verifica il JWT dal cookie authToken
+function verifyAuthToken(req) {
+    const cookieHeader = req.headers['cookie'];
+    if (!cookieHeader) return null;
+
+    // Cerca authToken=... nei cookie
+    const match = cookieHeader.match(/(?:^|;\s*)authToken=([^;]+)/);
+    if (!match) return null;
+
+    const token = match[1];
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        return decoded; // Ritorna il payload del token verificato
+    } catch (err) {
+        return null; // Token non valido o scaduto
+    }
 }
 
 export default async function handler(req, res) {
     if (req.method !== 'GET' && req.method !== 'POST') {
-        res.writeHead(405, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify({error: 'Metodo non consentito'}));
+        res.writeHead(405, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Metodo non consentito' }));
         return;
     }  
     
@@ -41,225 +58,237 @@ export default async function handler(req, res) {
 
     log(method, path);
 
-    if (method == 'POST' && path == '/auth') {
-        let body = ''
-        req.on('data', chunk => body += chunk)
-        req.on('end', () => {
-            fetch (serverUrl, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'api-key': API_KEY
-                },
-                body: body
-            })
+    // ==========================================
+    // 1. ROUTE PUBBLICHE (NON richiedono il token)
+    // ==========================================
 
-            .then(async response => {
-                const status_code = response.status;
-                const data = await response.json();
-
-                if (!response.ok) {
-                    res.end(JSON.stringify({error: data.message}));
-                    return;
-                }
-
-                // Impostare il Cookie come Secure quando va in prod
-                res.writeHead(201, {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': 'https://www.choreflow.it',
-                    'Access-Control-Allow-Credentials': 'true',
-                    'Set-Cookie': `authToken=${generateJWT(data)}; Path=/; SameSite=Lax; HttpOnly; Max-Age=2592000; Secure;`
-                });
-                res.end(JSON.stringify(data));
-                return;
-            });
-        });
+    // Health check root (/api/)
+    if (method === 'GET' && (path === '/' || path === '')) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ succes: true }));
         return;
     }
 
-    if (!req.headers['cookie']) {
-        res.writeHead(401, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify({error: 'Non autorizzato'}));
-        return;
-    }
-
-    //
-    // DB METHODS
-    // Questi metodi alterano i valori all'interno del DB 
-    //
-    if (method == 'GET' && path == '/') {
-        res.writeHead(200, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify({succes: true}));
-        return;
-    }
-
-    if (method == 'POST' && path == '/create_house') {
-        let body = ''; 
-        req.on('data', chunk => body += chunk);
-        req.on('end', () => {
-            const { house_name } = JSON.parse(body);
-            create_house(house_name)
-            .then(response => {
-                console.log(response);
-                res.writeHead(201, {'Content-Type': 'application/json'});
-                res.end(JSON.stringify({created: response}));
-            })
-            .catch(error => {
-                res.writeHead(400, {'Content-Type': 'application/json'});
-                res.end(JSON.stringify(error));
-            });
-        });
-        return;
-    }
-
-    // {HOSTNAME}/api/get_house?house_url=URL no ''
-    if (method == 'GET' && path == '/get_house') {
-        const house_url = parsed_url.query.house_url;
-        get_house(house_url)
-            .then(response => {
-                if (!response.succes) {
-                    res.writeHead(500, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify(response));
-                    return;
-                }
-
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify(response));
-            });
-        return;
-    }
-
-    if (method == 'POST' && path == '/create_user') {
+    // Login (/api/auth)
+    if (method === 'POST' && path === '/auth') {
         let body = '';
         req.on('data', chunk => body += chunk);
         req.on('end', async () => {
-            const { nome, password, house_url } = JSON.parse(body);
-            const response = await create_user(nome, password, house_url);
-            
-            if (!response.succes) {
-                res.writeHead(401, {'Content-Type': 'application/json'});
-                res.end(JSON.stringify(response));
-                return;
-            }
+            try {
+                const { nome, password } = JSON.parse(body);
+                const dbRes = await login(nome, password);
 
-            res.writeHead(201, {'Content-Type': 'application/json'});
-            res.end(JSON.stringify(response));
-            return;
+                if (!dbRes || !dbRes.succes) {
+                    res.writeHead(401, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Credenziali non valide' }));
+                    return;
+                }
+
+                // Genera JWT e invia il Set-Cookie sicuro
+                const token = generateJWT({ user: nome });
+                res.writeHead(201, {
+                    'Content-Type': 'application/json',
+                    'Set-Cookie': `authToken=${token}; Path=/; SameSite=Lax; HttpOnly; Max-Age=2592000; Secure;`
+                });
+                res.end(JSON.stringify(dbRes));
+            } catch (err) {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: err.message }));
+            }
         });
         return;
     }
 
-    // {HOSTNAME}/api/get_users?house_url= 
-    if (method == 'GET' && path == '/get_users') {
+    // Registrazione nuovo utente (/api/create_user)
+    if (method === 'POST' && path === '/create_user') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', async () => {
+            try {
+                const { nome, password, house_url } = JSON.parse(body);
+                const response = await create_user(nome, password, house_url);
+                const status = response.succes ? 201 : 401;
+                res.writeHead(status, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify(response));
+            } catch (err) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Payload JSON non valido' }));
+            }
+        });
+        return;
+    }
+
+    // ==========================================
+    // 2. CONTROLLO AUTENTICAZIONE (JWT)
+    // Da qui in poi tutte le route richiedono authToken valido
+    // ==========================================
+    const userSession = verifyAuthToken(req);
+    if (!userSession) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Non autorizzato: token assente o non valido' }));
+        return;
+    }
+
+    // ==========================================
+    // 3. ROUTE PROTETTE DAL TOKEN
+    // ==========================================
+
+    // Recupero casa (/api/get_house)
+    if (method === 'GET' && path === '/get_house') {
+        const house_url = parsed_url.query.house_url;
+        get_house(house_url)
+            .then(response => {
+                const status = response.succes ? 200 : 500;
+                res.writeHead(status, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify(response));
+            })
+            .catch(err => {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: err.message }));
+            });
+        return;
+    }
+
+    // Lista utenti della casa (/api/get_users)
+    if (method === 'GET' && path === '/get_users') {
         const house_url = parsed_url.query.house_url;
         get_users(house_url) 
-        .then(response => {
-            res.writeHead(200, {'Content-Type': 'application/json'});
-            res.end(JSON.stringify(response));
-        })
-        .catch(error => {
-            res.writeHead(400, {'Content-Type': 'application/json'});
-            res.end(JSON.stringify(error));
+            .then(response => {
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify(response));
+            })
+            .catch(error => {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify(error));
+            });
+        return;
+    }
+
+    // Crea casa (/api/create_house)
+    if (method === 'POST' && path === '/create_house') {
+        let body = ''; 
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            try {
+                const { house_name } = JSON.parse(body);
+                create_house(house_name)
+                    .then(response => {
+                        res.writeHead(201, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ created: response }));
+                    })
+                    .catch(error => {
+                        res.writeHead(400, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify(error));
+                    });
+            } catch (err) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'JSON non valido' }));
+            }
         });
         return;
     }
 
-    if (method == 'POST' && path == '/leave_house') {
+    // Unisciti a casa esistente (/api/join_house)
+    if (method === 'POST' && path === '/join_house') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            try {
+                const { name, house_url } = JSON.parse(body);
+                join_house(name, house_url)
+                    .then(response => {
+                        res.writeHead(201, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify(response));
+                    })
+                    .catch(error => {
+                        res.writeHead(400, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify(error));
+                    });
+            } catch (err) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'JSON non valido' }));
+            }
+        });
+        return;
+    }
+
+    // Abbandona casa (/api/leave_house)
+    if (method === 'POST' && path === '/leave_house') {
         let body = '';
         req.on('data', chunk => body += chunk);
         req.on('end', () => {
             const { name, house_url } = JSON.parse(body);
             leave_house(name, house_url)
-            .then(response => {
-                res.writeHead(201, {'Content-Type': 'application/json'});
-                res.end(JSON.stringify(response));
-            })
-            .catch(error => {
-                res.writeHead(400, {'Content-Type': 'application/json'});
-                res.end(JSON.stringify(error));
-            });
+                .then(response => {
+                    res.writeHead(201, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify(response));
+                })
+                .catch(error => {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify(error));
+                });
         });
         return;
     }
 
-    if (method == 'POST' && path == '/delete_user') {
+    // Elimina utente (/api/delete_user)
+    if (method === 'POST' && path === '/delete_user') {
         let body = '';
         req.on('data', chunk => body += chunk);
         req.on('end', () => {
             const { name, password } = JSON.parse(body);
             delete_user(name, password)
-            .then(response => {
-                res.writeHead(201, {'Content-Type': 'application/json'});
-                res.end(JSON.stringify(response));
-            })
-            .catch(error => {
-                res.writeHead(400, {'Content-Type': 'application/json'});
-                res.end(JSON.stringify(error));
-            });
+                .then(response => {
+                    res.writeHead(201, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify(response));
+                })
+                .catch(error => {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify(error));
+                });
         });
         return;
     }
 
-    if (method == 'POST' && path == '/join_house') {
-        let body = '';
-        req.on('data', chunk => body += chunk);
-        req.on('end', () => {
-            const { name, house_url } = JSON.parse(body);
-            join_house(name, house_url)
-            .then(response => {
-                res.writeHead(201, {'Content-Type': 'application/json'});
-                res.end(JSON.stringify(response));
-            })
-            .catch(error => {
-                res.writeHead(400, {'Content-Type': 'application/json'});
-                res.end(JSON.stringify(error));
-            })
-        });
-        return;
-    }
-
-    if (method == 'POST' && path == '/create_room') {
+    // Crea stanza (/api/create_room)
+    if (method === 'POST' && path === '/create_room') {
         let body = '';
         req.on('data', chunk => body += chunk);
         req.on('end', async () => {
-            const { name, house_url } = json.parse(body);
-            const response = await create_room(house_url, name);
-            
-            if (!response.succes) {
-                res.writeHead(500, {'Content-Type': 'application/json' });
+            try {
+                const { name, house_url } = JSON.parse(body);
+                const response = await create_room(house_url, name);
+                const status = response.succes ? 201 : 500;
+                res.writeHead(status, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(response));
-                return;
+            } catch (err) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'JSON non valido' }));
             }
-
-            res.writeHead(201, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(response));
         });
         return;
     }
 
-    if (method == 'POST' && path == '/delete_room') {
+    // Elimina stanza (/api/delete_room)
+    if (method === 'POST' && path === '/delete_room') {
         let body = '';
         req.on('data', chunk => body += chunk);
         req.on('end', async () => {
-            const { name, house_url } = JSON.parse(body);
-            const response = await delete_room(house_url, name);
-
-            if (!response.succes) {
-                res.writeHead(500, { 'Content-Type': 'application/json' });
+            try {
+                const { name, house_url } = JSON.parse(body);
+                const response = await delete_room(house_url, name);
+                const status = response.succes ? 201 : 500;
+                res.writeHead(status, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(response));
-                return;
+            } catch (err) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'JSON non valido' }));
             }
-
-            res.writeHead(201, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(response));
         });
         return;
     }
 
-
-    res.writeHead(400, {'Content-Type': 'application/json'});
-    res.end(JSON.stringify({error: 'Percorso non trovato'}));
-    return;
-    
+    // Se l'endpoint non è riconosciuto
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Percorso non trovato' }));
 }
