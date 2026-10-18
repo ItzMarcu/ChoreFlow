@@ -1,4 +1,5 @@
 import { PROXY_URL } from "./utils/const.js";
+import { sleep } from "./register.js";
 
 export function renderLogin() {
     const dom = document.createElement('div');
@@ -16,6 +17,10 @@ export function renderLogin() {
                 <p>Non hai ancora un'account? <a href="#register">Registrati</a></p>
             </div>
         </form>
+
+        <div class="toast hidden">
+            <p id="info"></p>
+        </div>
     `; 
 
     // Flusso login:  
@@ -38,6 +43,15 @@ export function renderLogin() {
             dom.querySelector('#login-button').disabled = false;
             dom.querySelector('#login-button').opacity = '1';
             dom.querySelector('#login-button').textContent = 'Accedi';
+            
+            dom.querySelector('.toast').classList.remove('hidden');
+            dom.querySelector('#info').innerHTML = 'Compilare tutti i campi';
+
+            await sleep(500);
+
+            dom.querySelector('.toast').classList.add('hidden');
+            dom.querySelector('#info').innerHTML = '';
+
             return;
         }
 
@@ -64,10 +78,17 @@ export function renderLogin() {
             dom.querySelector('#login-button').opacity = '1';
             dom.querySelector('#login-button').textContent = 'Accedi';
 
+            dom.querySelector('.toast').classList.remove('hidden');
+            dom.querySelector('#info').innerHTML = 'Credenziali non valide';
+
+            await sleep(500);
+
+            dom.querySelector('.toast').classList.add('hidden');
+            dom.querySelector('#info').innerHTML = '';
+
             return;
         }
         
-        console.info('Login riuscito');
 
         dom.querySelector('input[type="text"]').value = '';
         dom.querySelector('input[type="password"]').value = '';
@@ -79,9 +100,6 @@ export function renderLogin() {
         localStorage.setItem('house_url', data.house_url);
         localStorage.setItem('house_name', house_name);
         localStorage.setItem('logged', true);
-
-
-
         
         if (!data.house_url) {
             window.location.hash = '#onboarding';
