@@ -47,7 +47,7 @@ function verifyAuthToken(req) {
 
 export default async function handler(req, res) {
     if (req.method !== 'GET' && req.method !== 'POST') {
-        res.writeHead(405, { 'Content-Type': 'application/json' });
+        res.writeHead(405, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
         res.end(JSON.stringify({ error: 'Metodo non consentito' }));
         return;
     }  
@@ -64,7 +64,7 @@ export default async function handler(req, res) {
 
     // Health check root (/api/)
     if (method === 'GET' && (path === '/' || path === '')) {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.writeHead(200, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
         res.end(JSON.stringify({ succes: true }));
         return;
     }
@@ -79,7 +79,7 @@ export default async function handler(req, res) {
                 const dbRes = await login(nome, password);
 
                 if (!dbRes || !dbRes.succes) {
-                    res.writeHead(401, { 'Content-Type': 'application/json' });
+                    res.writeHead(401, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                     res.end(JSON.stringify({ error: 'Credenziali non valide' }));
                     return;
                 }
@@ -87,12 +87,12 @@ export default async function handler(req, res) {
                 // Genera JWT e invia il Set-Cookie sicuro
                 const token = generateJWT({ user: nome });
                 res.writeHead(201, {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it',
                     'Set-Cookie': `authToken=${token}; Path=/; SameSite=Lax; HttpOnly; Max-Age=2592000; Secure;`
                 });
                 res.end(JSON.stringify(dbRes));
             } catch (err) {
-                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.writeHead(500, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                 res.end(JSON.stringify({ error: err.message }));
             }
         });
@@ -108,10 +108,10 @@ export default async function handler(req, res) {
                 const { nome, password, house_url } = JSON.parse(body);
                 const response = await create_user(nome, password, house_url);
                 const status = response.succes ? 201 : 401;
-                res.writeHead(status, { 'Content-Type': 'application/json' });
+                res.writeHead(status, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                 res.end(JSON.stringify(response));
             } catch (err) {
-                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.writeHead(400, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                 res.end(JSON.stringify({ error: 'Payload JSON non valido' }));
             }
         });
@@ -124,7 +124,7 @@ export default async function handler(req, res) {
     // ==========================================
     const userSession = verifyAuthToken(req);
     if (!userSession) {
-        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.writeHead(401, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
         res.end(JSON.stringify({ error: 'Non autorizzato: token assente o non valido' }));
         return;
     }
@@ -139,11 +139,11 @@ export default async function handler(req, res) {
         get_house(house_url)
             .then(response => {
                 const status = response.succes ? 200 : 500;
-                res.writeHead(status, { 'Content-Type': 'application/json' });
+                res.writeHead(status, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                 res.end(JSON.stringify(response));
             })
             .catch(err => {
-                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.writeHead(500, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                 res.end(JSON.stringify({ error: err.message }));
             });
         return;
@@ -154,11 +154,11 @@ export default async function handler(req, res) {
         const house_url = parsed_url.query.house_url;
         get_users(house_url) 
             .then(response => {
-                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.writeHead(200, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                 res.end(JSON.stringify(response));
             })
             .catch(error => {
-                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.writeHead(400, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                 res.end(JSON.stringify(error));
             });
         return;
@@ -173,15 +173,15 @@ export default async function handler(req, res) {
                 const { house_name } = JSON.parse(body);
                 create_house(house_name)
                     .then(response => {
-                        res.writeHead(201, { 'Content-Type': 'application/json' });
+                        res.writeHead(201, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                         res.end(JSON.stringify({ created: response }));
                     })
                     .catch(error => {
-                        res.writeHead(400, { 'Content-Type': 'application/json' });
+                        res.writeHead(400, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                         res.end(JSON.stringify(error));
                     });
             } catch (err) {
-                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.writeHead(400, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                 res.end(JSON.stringify({ error: 'JSON non valido' }));
             }
         });
@@ -197,15 +197,15 @@ export default async function handler(req, res) {
                 const { name, house_url } = JSON.parse(body);
                 join_house(name, house_url)
                     .then(response => {
-                        res.writeHead(201, { 'Content-Type': 'application/json' });
+                        res.writeHead(201, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                         res.end(JSON.stringify(response));
                     })
                     .catch(error => {
-                        res.writeHead(400, { 'Content-Type': 'application/json' });
+                        res.writeHead(400, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                         res.end(JSON.stringify(error));
                     });
             } catch (err) {
-                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.writeHead(400, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                 res.end(JSON.stringify({ error: 'JSON non valido' }));
             }
         });
@@ -220,11 +220,11 @@ export default async function handler(req, res) {
             const { name, house_url } = JSON.parse(body);
             leave_house(name, house_url)
                 .then(response => {
-                    res.writeHead(201, { 'Content-Type': 'application/json' });
+                    res.writeHead(201, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                     res.end(JSON.stringify(response));
                 })
                 .catch(error => {
-                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.writeHead(400, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                     res.end(JSON.stringify(error));
                 });
         });
@@ -239,11 +239,11 @@ export default async function handler(req, res) {
             const { name, password } = JSON.parse(body);
             delete_user(name, password)
                 .then(response => {
-                    res.writeHead(201, { 'Content-Type': 'application/json' });
+                    res.writeHead(201, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                     res.end(JSON.stringify(response));
                 })
                 .catch(error => {
-                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.writeHead(400, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                     res.end(JSON.stringify(error));
                 });
         });
@@ -259,10 +259,10 @@ export default async function handler(req, res) {
                 const { name, house_url } = JSON.parse(body);
                 const response = await create_room(house_url, name);
                 const status = response.succes ? 201 : 500;
-                res.writeHead(status, { 'Content-Type': 'application/json' });
+                res.writeHead(status, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                 res.end(JSON.stringify(response));
             } catch (err) {
-                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.writeHead(400, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                 res.end(JSON.stringify({ error: 'JSON non valido' }));
             }
         });
@@ -278,10 +278,10 @@ export default async function handler(req, res) {
                 const { name, house_url } = JSON.parse(body);
                 const response = await delete_room(house_url, name);
                 const status = response.succes ? 201 : 500;
-                res.writeHead(status, { 'Content-Type': 'application/json' });
+                res.writeHead(status, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                 res.end(JSON.stringify(response));
             } catch (err) {
-                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.writeHead(400, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                 res.end(JSON.stringify({ error: 'JSON non valido' }));
             }
         });
@@ -289,6 +289,6 @@ export default async function handler(req, res) {
     }
 
     // Se l'endpoint non è riconosciuto
-    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
     res.end(JSON.stringify({ error: 'Percorso non trovato' }));
 }

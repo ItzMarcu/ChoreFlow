@@ -81,7 +81,7 @@ export function renderLogin() {
             dom.querySelector('.toast').classList.remove('hidden');
             dom.querySelector('#info').innerHTML = 'Credenziali non valide';
 
-            await sleep(500);
+            await sleep(3500);
 
             dom.querySelector('.toast').classList.add('hidden');
             dom.querySelector('#info').innerHTML = '';
