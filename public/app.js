@@ -24,7 +24,12 @@ const hiddenNavRoutes = ['login', 'register', 'onboarding', 'notfound'];
 
 
 async function router() {
-    // Controllo sull # dello URL 
+    // Controllo sull # dello URL
+    if (!window.location.hash || window.location.hash === '#') {
+        window.location.hash = '#dashboard';
+        return;
+    }
+    
     const route = window.location.hash.slice(1);
     const isAuthRoute = hiddenNavRoutes.includes(route);
     const isAuthenticated = await checkAuth();
@@ -62,7 +67,6 @@ async function router() {
 }
 
 window.addEventListener('hashchange', router);
-// Aggiungere handler nel Caso di 401
 router();
 
 // Ping al proxy per verificare la validità del token
