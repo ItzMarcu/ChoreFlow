@@ -24,6 +24,14 @@ export function renderSettings() {
                     <span class="settings-arrow">→</span>
                 </div>
 
+                <div class="settings-container" id="invite">
+                    <div class="settings-item-content">
+                        <span class="settings-item-title">Invita nella tua casa</span>
+                        <p class="settings-item-desc">Condividi il codice della casa per invitare i tuoi coinquilini</p> 
+                    </div>
+                    <span class="settings-arrow">→</span>
+                </div>
+
                 <div class="settings-container" id="logout">
                     <div class="settings-item-content">
                         <span class="settings-item-title">Esci</span>
@@ -71,7 +79,21 @@ export function renderSettings() {
         dom.querySelector('.trash-settings-modal').classList.add('fade-in');
     });
 
-    // Quando si clicca su 'Esci'
+    // Quando si clicca su 'Invita nella tua casa':
+    dom.querySelector('#invite').addEventListener('click', async (e) => {
+        e.preventDefault();
+        await navigator.clipboard.writeText(localStorage.getItem('house_url'));
+
+        dom.querySelector('.toast').classList.remove('hidden');
+        dom.querySelector('#info').innerHTML = 'Codice copiato negli appunti';
+
+        await sleep(3500);
+
+        dom.querySelector('.toast').classList.add('hidden');
+        dom.querySelector('#info').innerHTML = '';
+    });
+
+    // Quando si clicca su 'Esci':
     dom.querySelector('#logout').addEventListener('click', async (e) => {
         e.preventDefault();
         const response = await fetch(`${PROXY_URL}/api/logout`, {
