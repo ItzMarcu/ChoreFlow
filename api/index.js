@@ -133,6 +133,15 @@ export default async function handler(req, res) {
         return;
     }
 
+    // Logout (/api/logout)
+    if (method === 'POST' && path === '/logout') {
+        res.writeHead(200, { 'Content-Type': 'application/json',
+                             'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it',
+                             'Set-Cookie': 'authToken=; Path=/; SameSite=Lax; HttpOnly; Max-Age=0; Secure' });
+        res.end(JSON.stringify({succes: true}));
+        return;
+    }
+
     // Recupero casa (/api/get_house)
     if (method === 'GET' && path === '/get_house') {
         const house_url = parsed_url.query.house_url;

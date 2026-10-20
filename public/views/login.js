@@ -1,5 +1,4 @@
-import { PROXY_URL } from "./utils/const.js";
-import { sleep } from "./register.js";
+import { PROXY_URL, sleep } from "./utils/const.js";
 
 export function renderLogin() {
     const dom = document.createElement('div');
@@ -47,7 +46,7 @@ export function renderLogin() {
             dom.querySelector('.toast').classList.remove('hidden');
             dom.querySelector('#info').innerHTML = 'Compilare tutti i campi';
 
-            await sleep(500);
+            await sleep(3500);
 
             dom.querySelector('.toast').classList.add('hidden');
             dom.querySelector('#info').innerHTML = '';

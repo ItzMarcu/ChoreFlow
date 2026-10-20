@@ -3,7 +3,7 @@ import { renderSpeseCosti } from "./views/spese_costi.js";
 import { renderLogin } from "./views/login.js";
 import { renderRegister } from "./views/register.js";
 import { renderOnboarding } from "./views/onboarding.js";
-import { renderSettings } from "./views/renderSettings.js";
+import { renderSettings } from "./views/settings.js";
 import { renderNotFound } from "./views/utils/notFound.js";
 import { PROXY_URL } from './views/utils/const.js';
 

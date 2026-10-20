@@ -1,4 +1,4 @@
-import { PROXY_URL } from "./utils/const.js";
+import { PROXY_URL, sleep } from "./utils/const.js";
 
 export function renderSettings() {
     const dom = document.createElement('div');
@@ -6,6 +6,7 @@ export function renderSettings() {
         <div class="settings-view">
             <h1 class="settings-title">Impostazioni</h1>
 
+            <!-- METTERE QUA DENTRO LE IMPOSTAZIONI --> 
             <div class="settings-list">
                 <div class="settings-container" id="rooms">
                     <div class="settings-item-content">
@@ -19,6 +20,14 @@ export function renderSettings() {
                     <div class="settings-item-content">
                         <span class="settings-item-title">Rotazione spazzatura</span>
                         <p class="settings-item-desc">Regole di raccolta e turni sacchi</p>
+                    </div>
+                    <span class="settings-arrow">→</span>
+                </div>
+
+                <div class="settings-container" id="logout">
+                    <div class="settings-item-content">
+                        <span class="settings-item-title">Esci</div>
+                        <p class="settings-item-desc">Una volta uscito dovrai rieffettuare il login</p>
                     </div>
                     <span class="settings-arrow">→</span>
                 </div>
@@ -40,6 +49,10 @@ export function renderSettings() {
                 </div>
             <button type="button" class="btn-back"> ← Torna alla dashboard</button>
         </div>
+
+        <div class="toast hidden">
+            <p id="info"></p>
+        </div>
     `;
 
     // Quando si clicca su 'Stanze della casa':
@@ -56,6 +69,38 @@ export function renderSettings() {
         dom.querySelector('.settings-view').classList.add('hidden');
         dom.querySelector('.trash-settings-modal').classList.remove('hidden');
         dom.querySelector('.trash-settings-modal').classList.add('fade-in');
+    });
+
+    // Quando si clicca su 'Esci'
+    dom.querySelector('#logout').addEventListener('click', async (e) => {
+        e.preventDefault();
+        const response = await fetch(`${PROXY_URL}/api/logout`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            dom.querySelector('.toast').classList.remove('hidden');
+            dom.querySelector('#info').innerHTML = 'Errore durante il logout, riprova più tardi';
+
+            await sleep(3500);
+
+            dom.querySelector('.toast').classList.add('hidden');
+            dom.querySelector('#info').innerHTML = '';
+            
+            return;
+        }
+        
+        dom.querySelector('.toast').classList.remove('hidden');
+        dom.querySelector('#info').innerHTML = 'Logout effettuato';
+
+        await sleep(3500);
+
+        dom.querySelector('.toast').classList.add('hidden');
+        dom.querySelector('#info').innerHTML = '';
     });
 
     dom.querySelectorAll('.btn-back').forEach(btn => {

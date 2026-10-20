@@ -1,6 +1,4 @@
-import { PROXY_URL } from "./utils/const.js";
-
-export const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+import { PROXY_URL, sleep } from "./utils/const.js";
 
 export function renderRegister() {
     const dom = document.createElement('div');
