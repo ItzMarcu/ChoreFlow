@@ -97,12 +97,12 @@ export function renderSettings() {
         dom.querySelector('.toast').classList.remove('hidden');
         dom.querySelector('#info').innerHTML = 'Logout effettuato';
 
+        window.location.hash = '#login';
         await sleep(3500);
 
         dom.querySelector('.toast').classList.add('hidden');
         dom.querySelector('#info').innerHTML = '';
 
-        window.location.hash = '#login';
     });
 
     dom.querySelectorAll('.btn-back').forEach(btn => {
