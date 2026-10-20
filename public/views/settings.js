@@ -37,6 +37,7 @@ export function renderSettings() {
                         <span class="settings-item-title">Abbandona la casa</span>
                         <p class="settings-item-desc">Lascia la casa corrente.</p>
                     </div>
+                    <span class="settings-arrow">→</span>
                 </div>
 
                 <div class="settings-container important" id="logout">
