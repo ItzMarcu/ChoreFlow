@@ -26,7 +26,7 @@ export function renderSettings() {
 
                 <div class="settings-container" id="logout">
                     <div class="settings-item-content">
-                        <span class="settings-item-title">Esci</div>
+                        <span class="settings-item-title">Esci</span>
                         <p class="settings-item-desc">Una volta uscito dovrai rieffettuare il login</p>
                     </div>
                     <span class="settings-arrow">→</span>
@@ -90,7 +90,7 @@ export function renderSettings() {
 
             dom.querySelector('.toast').classList.add('hidden');
             dom.querySelector('#info').innerHTML = '';
-            
+
             return;
         }
         
