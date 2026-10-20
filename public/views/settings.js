@@ -135,7 +135,7 @@ export function renderSettings() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    name: localStorage.getItem('name'),
+                    name: localStorage.getItem('nome'),
                     house_url: localStorage.getItem('house_url')
                 })
             });
