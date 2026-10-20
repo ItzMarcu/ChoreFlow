@@ -882,7 +882,7 @@ h1 + h2 {
    ========================================================================== */
 .toast {
   position: fixed;
-  bottom: 50px;
+  top: 24px;
   left: 50%;
   transform: translateX(-50%) translateY(0);
   z-index: 2000;
