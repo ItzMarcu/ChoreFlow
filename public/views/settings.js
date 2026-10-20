@@ -101,6 +101,8 @@ export function renderSettings() {
 
         dom.querySelector('.toast').classList.add('hidden');
         dom.querySelector('#info').innerHTML = '';
+
+        window.location.hash = '#login';
     });
 
     dom.querySelectorAll('.btn-back').forEach(btn => {
