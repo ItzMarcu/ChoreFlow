@@ -16,7 +16,7 @@ export function renderRegister() {
                 <input type="password" placeholder="Password" id="password-check" required>
 
                 <button id="login-button">Registrati</button>
-                <p>Hai già un account? <a href="#login">accedi</a></p>
+                <p>Hai già un account? <a href="#login">Accedi</a></p>
             </div>
         </form>
     `;
