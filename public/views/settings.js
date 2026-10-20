@@ -66,7 +66,7 @@ export function renderSettings() {
             <button type="button" class="btn-back"> ← Torna alla dashboard</button>
         </div>
 
-        <div class="leave-house-settings-modal hidden">
+        <div class="leave-house-settings-modal hidden"">
             <h3>Abbandona la casa></h3>
             <div class="leave-house-confirmation">
                 <span class="important"> Sei sicuro di voler lasciare la casa?</span>
@@ -118,8 +118,8 @@ export function renderSettings() {
     dom.querySelector('#leave-house').addEventListener('click', async (e) => {
         e.preventDefault();
         dom.querySelector('.settings-view').classList.add('hidden');
-        dom.querySelector('leave-house-settings-modal').classList.remove('hidden');
-        dom.querySelector('leave-house-settings-modal').classList.add('fade-in');
+        dom.querySelector('.leave-house-settings-modal').classList.remove('hidden');
+        dom.querySelector('.leave-house-settings-modal').classList.add('fade-in');
 
         dom.querySelector('#no').addEventListener('click', (e) => {
             dom.querySelector('leave-house-settings-modal').classList.add('hidden');
