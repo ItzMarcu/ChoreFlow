@@ -878,6 +878,242 @@ h1 + h2 {
 }
 
 /* ==========================================================================
+   Danger / Important Settings Items
+   ========================================================================== */
+.settings-container.important {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  padding: 16px 20px;
+  margin-bottom: 14px;
+
+  /* Sfondo dark con tinta rossa sottile e blur */
+  background: rgba(30, 16, 16, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  /* Bordo rosso di avvertimento e bagliore tenue */
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  border-radius: var(--radius-md, 14px);
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    0 0 12px -2px rgba(239, 68, 68, 0.15);
+
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hover e interazione */
+.settings-container.important:hover {
+  background: rgba(45, 20, 20, 0.85);
+  border-color: rgba(239, 68, 68, 0.8);
+  box-shadow: 
+    0 6px 24px rgba(0, 0, 0, 0.6),
+    0 0 18px 0 rgba(239, 68, 68, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Effetto pressione / tap mobile */
+.settings-container.important:active {
+  transform: scale(0.985);
+  background: rgba(40, 15, 15, 0.95);
+  border-color: rgba(239, 68, 68, 1);
+}
+
+/* Contenuto testuale */
+.settings-container.important .settings-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Titolo evidenziato in rosso chiaro */
+.settings-container.important .settings-item-title {
+  font-family: var(--font-heading, 'Inter', sans-serif);
+  font-size: var(--text-base, 16px);
+  font-weight: 600;
+  color: #f87171;
+  letter-spacing: -0.01em;
+}
+
+/* Descrizione secondaria attenuata */
+.settings-container.important .settings-item-desc {
+  margin: 0;
+  font-size: var(--text-sm, 13px);
+  line-height: 1.4;
+  color: rgba(232, 242, 225, 0.65);
+}
+
+/* Freccia di navigazione */
+.settings-container.important .settings-arrow {
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(239, 68, 68, 0.7);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.settings-container.important:hover .settings-arrow {
+  color: #f87171;
+  transform: translateX(3px);
+}
+
+/* ==========================================================================
+   Leave House Modal (Confirmation Dialog)
+   ========================================================================== */
+
+/* Overlay a schermo intero centrato con glassmorphism */
+.leave-house-settings-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Stato nascosto */
+.leave-house-settings-modal.hidden {
+  display: none !important;
+}
+
+/* Titolo del modale */
+.leave-house-settings-modal h3 {
+  margin: 0 0 16px 0;
+  font-family: var(--font-heading, 'Inter', sans-serif);
+  font-size: var(--text-lg, 18px);
+  font-weight: 700;
+  color: var(--color-text, #e8f2e1);
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+/* Card interna di conferma con stile pericolo */
+.leave-house-confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+
+  width: 100%;
+  max-width: 360px;
+  padding: 24px 20px;
+
+  background: rgba(26, 15, 15, 0.95);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: var(--radius-md, 14px);
+  box-shadow: 
+    0 16px 40px -8px rgba(0, 0, 0, 0.8),
+    0 0 20px -2px rgba(239, 68, 68, 0.2);
+
+  animation: cardPop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Testo di avviso primario */
+.leave-house-confirmation span.important {
+  font-family: var(--font-heading, 'Inter', sans-serif);
+  font-size: var(--text-base, 15px);
+  font-weight: 600;
+  color: #fca5a5;
+  line-height: 1.35;
+}
+
+/* Descrizione secondaria */
+.leave-house-confirmation .settings-item-desc {
+  margin: 0 0 8px 0;
+  font-size: var(--text-sm, 13px);
+  line-height: 1.45;
+  color: rgba(232, 242, 225, 0.65);
+}
+
+/* Contenitore dei due pulsanti */
+.choice-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 6px;
+}
+
+/* Stile base pulsanti */
+.choice-form button {
+  flex: 1;
+  height: 42px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm, 10px);
+  font-family: var(--font-heading, 'Inter', sans-serif);
+  font-size: var(--text-sm, 14px);
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Pulsante 'No' (Azione neutra / Annulla) */
+.choice-form button#no {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text, #e8f2e1);
+  border: 1px solid rgba(232, 242, 225, 0.15);
+}
+
+.choice-form button#no:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(232, 242, 225, 0.3);
+}
+
+.choice-form button#no:active {
+  transform: scale(0.97);
+}
+
+/* Pulsante 'Sì' (Azione distruttiva) */
+.choice-form button#yes.important {
+  background: #dc2626;
+  color: #ffffff;
+  border: 1px solid rgba(239, 68, 68, 0.6);
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
+}
+
+.choice-form button#yes.important:hover {
+  background: #ef4444;
+  border-color: #f87171;
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45);
+}
+
+.choice-form button#yes.important:active {
+  transform: scale(0.97);
+}
+
+/* Animazioni di entrata */
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes cardPop {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ==========================================================================
    Toast Notification (Login / Register)
    ========================================================================== */
 .toast {

@@ -32,7 +32,14 @@ export function renderSettings() {
                     <span class="settings-arrow">→</span>
                 </div>
 
-                <div class="settings-container" id="logout">
+                <div class="settings-container important" id="leave-house">
+                    <div class="settings-item-content">
+                        <span class="settings-item-title">Abbandona la casa</span>
+                        <p class="settings-item-desc">Lascia la casa corrente.</p>
+                    </div>
+                </div>
+
+                <div class="settings-container important" id="logout">
                     <div class="settings-item-content">
                         <span class="settings-item-title">Esci</span>
                         <p class="settings-item-desc">Una volta uscito dovrai rieffettuare il login</p>
@@ -54,8 +61,21 @@ export function renderSettings() {
             <h3>Turni spazzatura</h3>
             <div class="trash-list-container">
                 <!-- Qua ci sarà una lista -->
-                </div>
+            </div>
             <button type="button" class="btn-back"> ← Torna alla dashboard</button>
+        </div>
+
+        <div class="leave-house-settings-modal hidden">
+            <h3>Abbandona la casa></h3>
+            <div class="leave-house-confirmation">
+                <span class="important"> Sei sicuro di voler lasciare la casa?</span>
+                <button type="button" class="btn-back"> ← Torna alla dashboard</button>
+                <p class="settings-item-desc">Quando lasci la casa i tuoi dati verrano disattivati</p>
+                <div class="choice-form">
+                    <button id="no">No</button>
+                    <button id="yes" class="important">Sì</button>
+                </div>
+            </div>
         </div>
 
         <div class="toast hidden">
@@ -91,6 +111,49 @@ export function renderSettings() {
 
         dom.querySelector('.toast').classList.add('hidden');
         dom.querySelector('#info').innerHTML = '';
+    });
+
+    // Quando si clicca su 'Abbandona la casa': 
+    dom.querySelector('#leave-house').addEventListener('click', async (e) => {
+        e.preventDefault();
+        dom.querySelector('.settings-view').classList.add('hidden');
+        dom.querySelector('leave-house-settings-modal').classList.remove('hidden');
+        dom.querySelector('leave-house-settings-modal').classList.add('fade-in');
+
+        dom.querySelector('#no').addEventListener('click', (e) => {
+            dom.querySelector('leave-house-settings-modal').classList.add('hidden');
+            dom.querySelector('.settings-view').classList.remove('hidden');
+            return;
+        });
+
+        dom.querySelector('#yes').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const response = await fetch(`${PROXY_URL}/api/leave_house`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: localStorage.getItem('name'),
+                    house_url: localStorage.getItem('house_url')
+                })
+            });
+
+            if (!response.ok) {
+                dom.querySelector('.toast').classList.remove('hidden');
+                dom.querySelector('#info').innerHTML = "Errore durante l'abbandono della casa";
+
+                await sleep(3500);
+
+                dom.querySelector('.toast').classList.add('hidden');
+                dom.querySelector('#info').innerHTML = '';
+                return;
+            }
+
+            window.location.href = '#login';
+            return;
+        });
     });
 
     // Quando si clicca su 'Esci':
