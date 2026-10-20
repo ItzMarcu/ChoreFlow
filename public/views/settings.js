@@ -67,7 +67,7 @@ export function renderSettings() {
         </div>
 
         <div class="leave-house-settings-modal hidden"">
-            <h3>Abbandona la casa></h3>
+            <h3>Abbandona la casa</h3>
             <div class="leave-house-confirmation">
                 <span class="important"> Sei sicuro di voler lasciare la casa?</span>
                 <button type="button" class="btn-back"> ← Torna alla dashboard</button>
@@ -197,7 +197,7 @@ export function renderSettings() {
             dom.querySelector('.settings-view').classList.remove('hidden');
             dom.querySelector('.rooms-settings-modal').classList.add('hidden');
             dom.querySelector('.trash-settings-modal').classList.add('hidden');
-            // Aggiungere gli altri modal!
+            dom.querySelector('.leave-house-settings-modal').classList.add('hidden');
 
             return;
         });
