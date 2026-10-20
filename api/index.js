@@ -62,13 +62,6 @@ export default async function handler(req, res) {
     // 1. ROUTE PUBBLICHE (NON richiedono il token)
     // ==========================================
 
-    // Health check root (/api/)
-    if (method === 'GET' && (path === '/' || path === '')) {
-        res.writeHead(200, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
-        res.end(JSON.stringify({ succes: true }));
-        return;
-    }
-
     // Login (/api/auth)
     if (method === 'POST' && path === '/auth') {
         let body = '';
@@ -132,6 +125,13 @@ export default async function handler(req, res) {
     // ==========================================
     // 3. ROUTE PROTETTE DAL TOKEN
     // ==========================================
+
+    // Health check root (/api/)
+    if (method === 'GET' && (path === '/' || path === '')) {
+        res.writeHead(200, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
+        res.end(JSON.stringify({ succes: true }));
+        return;
+    }
 
     // Recupero casa (/api/get_house)
     if (method === 'GET' && path === '/get_house') {
