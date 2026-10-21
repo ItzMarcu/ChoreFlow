@@ -122,7 +122,7 @@ export function renderSettings() {
 
         dom.querySelector('#no').addEventListener('click', (e) => {
             e.preventDefault();
-            dom.querySelector('leave-house-settings-modal').classList.add('hidden');
+            dom.querySelector('.leave-house-settings-modal').classList.add('hidden');
             dom.querySelector('.settings-view').classList.remove('hidden');
             return;
         });
