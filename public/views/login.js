@@ -69,7 +69,7 @@ export function renderLogin() {
 
         const data = await response.json();
 
-        if (!response.ok || !data.succes) {
+        if (!response.ok) {
             dom.querySelector('.toast').classList.remove('hidden');
             dom.querySelector('#info').innerHTML = 'Errore durante il login';
 
@@ -78,6 +78,10 @@ export function renderLogin() {
             dom.querySelector('.toast').classList.add('hidden');
             dom.querySelector('#info').innerHTML = '';
 
+            return;
+        }
+
+        if (!data.succes) {
             dom.querySelector('#login-button').disabled = false;
             dom.querySelector('#login-button').opacity = '1';
             dom.querySelector('#login-button').textContent = 'Accedi';
