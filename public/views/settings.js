@@ -133,6 +133,10 @@ export function renderSettings() {
             return;
         }
         
+        if (!data.rooms) {
+            return;
+        }
+
         renderRoomsList(data.rooms);
         
     });
