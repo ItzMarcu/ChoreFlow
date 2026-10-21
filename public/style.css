@@ -1116,21 +1116,25 @@ h1 + h2 {
 /* ==========================================================================
    Room Creation Container (Dashed / Empty State)
    ========================================================================== */
-.rooms-list-container .creation {
+   
+.rooms-list-container.creation {
   display: flex;
   align-items: center;
   justify-content: center;
+  
   width: 100%;
+  max-width: 420px;
   min-height: 110px;
-  padding: 20px;
-  margin: 12px 0;
+  padding: 24px 20px;
+  margin: 20px auto; /* auto sui lati per centrarlo orizzontalmente */
+  box-sizing: border-box;
 
-  /* Contorno tratteggiato con colore semitrasparente */
-  border: 2px dashed rgba(150, 205, 99, 0.4);
+  /* Contorno tratteggiato visibile */
+  border: 2px dashed rgba(150, 205, 99, 0.5);
   border-radius: var(--radius-md, 14px);
 
-  /* Sfondo glassmorphism dark coerente con le card */
-  background: rgba(17, 23, 14, 0.45);
+  /* Sfondo glassmorphism dark */
+  background: rgba(17, 23, 14, 0.55);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 
@@ -1138,9 +1142,9 @@ h1 + h2 {
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Hover sull'intero contenitore tratteggiato */
-.rooms-list-container .creation:hover {
-  background: rgba(26, 36, 21, 0.65);
+/* Hover sull'intero contenitore tratteggiato (anche qui niente spazio) */
+.rooms-list-container.creation:hover {
+  background: rgba(26, 36, 21, 0.75);
   border-color: var(--color-secondary, #96cd63);
   box-shadow: 0 0 16px -2px rgba(101, 163, 13, 0.25);
   transform: translateY(-1px);
@@ -1178,8 +1182,8 @@ h1 + h2 {
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Feedback visivo su hover e click del bottone */
-.rooms-list-container .creation:hover button#create-room,
+/* Feedback visivo su hover (senza spazio tra le classi) */
+.rooms-list-container.creation:hover button#create-room,
 .rooms-settings-modal-create-room button#create-room:hover {
   background: var(--color-secondary, #96cd63);
   color: #0b0f09;
