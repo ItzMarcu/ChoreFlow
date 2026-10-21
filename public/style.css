@@ -1116,7 +1116,7 @@ h1 + h2 {
 /* ==========================================================================
    Room Creation Container (Dashed / Empty State)
    ========================================================================== */
-.rooms-list-container.creation {
+.rooms-list-container .creation {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1139,7 +1139,7 @@ h1 + h2 {
 }
 
 /* Hover sull'intero contenitore tratteggiato */
-.rooms-list-container.creation:hover {
+.rooms-list-container .creation:hover {
   background: rgba(26, 36, 21, 0.65);
   border-color: var(--color-secondary, #96cd63);
   box-shadow: 0 0 16px -2px rgba(101, 163, 13, 0.25);
@@ -1179,7 +1179,7 @@ h1 + h2 {
 }
 
 /* Feedback visivo su hover e click del bottone */
-.rooms-list-container.creation:hover button#create-room,
+.rooms-list-container .creation:hover button#create-room,
 .rooms-settings-modal-create-room button#create-room:hover {
   background: var(--color-secondary, #96cd63);
   color: #0b0f09;
