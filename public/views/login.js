@@ -70,6 +70,10 @@ export function renderLogin() {
         const data = await response.json();
 
         if (!response.ok) {
+            dom.querySelector('#login-button').disabled = false;
+            dom.querySelector('#login-button').opacity = '1';
+            dom.querySelector('#login-button').textContent = 'Accedi';
+
             dom.querySelector('.toast').classList.remove('hidden');
             dom.querySelector('#info').innerHTML = 'Errore durante il login';
 

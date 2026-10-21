@@ -46,70 +46,89 @@ function verifyAuthToken(req) {
     }
 }
 
+async function getRequestBody(req) {
+    if (req.body) {
+        return typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    }
+    return new Promise((resolve, reject) => {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            try {
+                resolve(body ? JSON.parse(body) : {});
+            } catch (err) {
+                reject(err);
+            }
+        });
+        req.on('error', err => reject(err));
+    });
+}
+
 export default async function handler(req, res) {
     if (req.method !== 'GET' && req.method !== 'POST') {
-        res.writeHead(405, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
+        res.writeHead(405, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'Metodo non consentito' }));
         return;
     }  
     
     const parsed_url = url.parse(req.url, true);
-    const path = parsed_url.pathname.replace(/^\/api/, '');
-    const method = req.method;
+    // Rimuove /api iniziale e toglie eventuali slash finali per match pulito
+    let path = parsed_url.pathname.replace(/^\/api/, '');
+    if (path.length > 1 && path.endsWith('/')) {
+        path = path.slice(0, -1);
+    }
+    if (!path) path = '/';
 
+    const method = req.method;
     log(method, path);
 
     // ==========================================
     // 1. ROUTE PUBBLICHE (NON richiedono il token)
     // ==========================================
 
-    // Login (/api/auth)
-    if (method === 'POST' && path === '/auth') {
-        let body = '';
-        req.on('data', chunk => body += chunk);
-        req.on('end', async () => {
-            try {
-                const { nome, password } = JSON.parse(body);
-                const dbRes = await login(nome, password);
+    // Login (/api/auth o /auth)
+    if (method === 'POST' && (path === '/auth' || path === '/auth/')) {
+        try {
+            const body = await getRequestBody(req);
+            const { nome, password } = body;
+            const dbRes = await login(nome, password);
 
-                if (!dbRes || !dbRes.succes) {
-                    res.writeHead(401, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
-                    res.end(JSON.stringify({ error: 'Credenziali non valide' }));
-                    return;
-                }
-
-                // Genera JWT e invia il Set-Cookie sicuro
-                const token = generateJWT({ user: nome });
-                res.writeHead(201, {
-                    'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it',
-                    'Set-Cookie': `authToken=${token}; Path=/; SameSite=Lax; HttpOnly; Max-Age=2592000; Secure;`
-                });
-                res.end(JSON.stringify(dbRes));
-            } catch (err) {
-                res.writeHead(500, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
-                res.end(JSON.stringify({ error: err.message }));
+            if (!dbRes || !dbRes.succes) {
+                res.writeHead(401, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Credenziali non valide' }));
+                return;
             }
-        });
-        return;
+
+            // Genera JWT e invia il Set-Cookie sicuro
+            const token = generateJWT({ user: nome });
+            res.writeHead(201, {
+                'Content-Type': 'application/json',
+                'Set-Cookie': `authToken=${token}; Path=/; SameSite=Lax; HttpOnly; Max-Age=2592000; Secure;`
+            });
+            res.end(JSON.stringify(dbRes));
+            return;
+        } catch (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: err.message }));
+            return;
+        }
     }
 
     // Registrazione nuovo utente (/api/create_user)
-    if (method === 'POST' && path === '/create_user') {
-        let body = '';
-        req.on('data', chunk => body += chunk);
-        req.on('end', async () => {
-            try {
-                const { nome, password, house_url } = JSON.parse(body);
-                const response = await create_user(nome, password, house_url);
-                const status = response.succes ? 201 : 401;
-                res.writeHead(status, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
-                res.end(JSON.stringify(response));
-            } catch (err) {
-                res.writeHead(400, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
-                res.end(JSON.stringify({ error: 'Payload JSON non valido' }));
-            }
-        });
-        return;
+    if (method === 'POST' && (path === '/create_user' || path === '/create_user/')) {
+        try {
+            const body = await getRequestBody(req);
+            const { nome, password, house_url } = body;
+            const response = await create_user(nome, password, house_url);
+            const status = response.succes ? 201 : 401;
+            res.writeHead(status, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(response));
+            return;
+        } catch (err) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Payload JSON non valido' }));
+            return;
+        }
     }
 
     // ==========================================
