@@ -147,8 +147,8 @@ export function renderSettings() {
         dom.querySelector('.rooms-settings-creation-modal').classList.add('fade-in');
     });
 
-    dom.querySelector('#confirm-room-creation', async (e) => {
-        const name = dom.querySelector('#room-name').textContent;
+    dom.querySelector('#confirm-room-creation').addEventListener( async (e) => {
+        const name = dom.querySelector('#room-name').value.trim();
         const house_url = localStorage.getItem('house_url');
 
         const response = await fetch(`${PROXY_URL}/api/create_room`, {
