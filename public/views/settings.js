@@ -1,4 +1,4 @@
-import { PROXY_URL, sleep } from "./utils/const.js";
+import { PROXY_URL, sleep } from "./utils/utils.js";
 
 export function renderSettings() {
     const dom = document.createElement('div');
@@ -70,7 +70,6 @@ export function renderSettings() {
             <h3>Abbandona la casa</h3>
             <div class="leave-house-confirmation">
                 <span class="important"> Sei sicuro di voler lasciare la casa?</span>
-                <button type="button" class="btn-back"> ← Torna alla dashboard</button>
                 <p class="settings-item-desc">Quando lasci la casa i tuoi dati verrano disattivati</p>
                 <div class="choice-form">
                     <button id="no">No</button>
@@ -122,6 +121,7 @@ export function renderSettings() {
         dom.querySelector('.leave-house-settings-modal').classList.add('fade-in');
 
         dom.querySelector('#no').addEventListener('click', (e) => {
+            e.preventDefault();
             dom.querySelector('leave-house-settings-modal').classList.add('hidden');
             dom.querySelector('.settings-view').classList.remove('hidden');
             return;
@@ -197,7 +197,6 @@ export function renderSettings() {
             dom.querySelector('.settings-view').classList.remove('hidden');
             dom.querySelector('.rooms-settings-modal').classList.add('hidden');
             dom.querySelector('.trash-settings-modal').classList.add('hidden');
-            dom.querySelector('.leave-house-settings-modal').classList.add('hidden');
 
             return;
         });
