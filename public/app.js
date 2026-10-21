@@ -5,7 +5,7 @@ import { renderRegister } from "./views/register.js";
 import { renderOnboarding } from "./views/onboarding.js";
 import { renderSettings } from "./views/settings.js";
 import { renderNotFound } from "./views/utils/notFound.js";
-import { PROXY_URL } from './views/utils/const.js';
+import { PROXY_URL } from './views/utils/utils.js';
 
 // Creare le icone in .png 192x192 e 512x512
 
