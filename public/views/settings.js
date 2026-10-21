@@ -69,7 +69,7 @@ export function renderSettings() {
                 <span class="settings-item-title"> Come si chiama questa stanza?</span>
                 <p class="settings-item-desc">Potrai modificare i dettagli in seguito</p>
                 <input type="text" placeholder="Bagno" id="room-name" required>
-                <button type="button" id="confirm-room-creation">Crea la stanza!</div>
+                <button type="button" id="confirm-room-creation">Crea la stanza!</button>
                 <span class="settings-arrow">→</span>    
             </div>
         </div>
@@ -83,7 +83,7 @@ export function renderSettings() {
             <button type="button" class="btn-back"> ← Torna alla dashboard</button>
         </div>
 
-        <div class="leave-house-settings-modal hidden"">
+        <div class="leave-house-settings-modal hidden">
             <h3>Abbandona la casa</h3>
             <div class="leave-house-confirmation">
                 <span class="important"> Sei sicuro di voler lasciare la casa?</span>
