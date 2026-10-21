@@ -112,7 +112,7 @@ export function renderSettings() {
         dom.querySelector('.rooms-settings-modal').classList.add('fade-in');
 
         // Recuperare tutte le stanze della casa
-        const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url=${house_url}`, {
+        const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url=${localStorage.getItem('house_url')}`, {
             method: 'GET', 
             credentials: 'include',
             headers: {
