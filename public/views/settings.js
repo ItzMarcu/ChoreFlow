@@ -147,7 +147,7 @@ export function renderSettings() {
         dom.querySelector('.rooms-settings-creation-modal').classList.add('fade-in');
     });
 
-    dom.querySelector('#confirm-room-creation').addEventListener( async (e) => {
+    dom.querySelector('#confirm-room-creation').addEventListener('click', async (e) => {
         const name = dom.querySelector('#room-name').value.trim();
         const house_url = localStorage.getItem('house_url');
 
