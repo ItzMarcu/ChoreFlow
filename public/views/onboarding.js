@@ -161,8 +161,4 @@ async function join_house(name, house_url) {
         console.error('Errore durante la unione alla casa');
         return;
     }
-
-    console.log(data);
-
-    return;
 } 
