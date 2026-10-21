@@ -9,7 +9,8 @@ import {
     join_house,
     login,
     create_room,
-    delete_room
+    delete_room,
+    get_rooms
 } from './db.js';
 
 // node.js modules 
@@ -294,6 +295,22 @@ export default async function handler(req, res) {
                 res.end(JSON.stringify({ error: 'JSON non valido' }));
             }
         });
+        return;
+    }
+
+    // Recupera le stanze di una casa (/api/get_rooms)
+    if (method === 'GET' && path === '/get_rooms') {
+        const house_url = parsed_url.query.house_url;
+        const response = await get_rooms(house_url);
+        
+        if (!response.succes) {
+            res.writeHead(400, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
+            res.end(JSON.stringify({error: response.error}));
+            return;
+        }
+        
+        res.writeHead(200, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
+        res.end(JSON.stringify(response));
         return;
     }
 

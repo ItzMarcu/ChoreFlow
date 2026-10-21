@@ -50,14 +50,31 @@ export function renderSettings() {
             </div>
         </div>
 
+        <!-- Crea/Elimina una stanza -->
         <div class="rooms-settings-modal hidden">
-            <h3>Le stanze della casa</h3>
+        <h3>Le stanze della casa</h3>
+        <button type="button" class="btn-back"> ← Torna alla dashboard</button>
             <div class="rooms-list-container">
-                <!-- Qua ci sarà una lista -->
+                <!-- Qui vengono inserite le stanze -->    
             </div>
-            <button type="button" class="btn-back"> ← Torna alla dashboard</button>
+            
+            <div class="rooms-settings-modal-create-room creation">
+                <button type="button" id="create-room">Aggiungi una stanza +</button> 
+            </div>
         </div>
 
+        <div class="rooms-settings-creation-modal hidden">
+            <h3>Aggiungi una nuova stanza</h3>
+            <div class="create-house-confirmation">
+                <span class="settings-item-title"> Come si chiama questa stanza?</span>
+                <p class="settings-item-desc">Potrai modificare i dettagli in seguito</p>
+                <input type="text" placeholder="Bagno" id="room-name" required>
+                <button type="button" id="confirm-room-creation">Crea la stanza!</div>
+                <span class="settings-arrow">→</span>    
+            </div>
+        </div>
+
+        <!-- Imposta le regole della spazzatura -->
         <div class="trash-settings-modal hidden">
             <h3>Turni spazzatura</h3>
             <div class="trash-list-container">
@@ -83,13 +100,109 @@ export function renderSettings() {
         </div>
     `;
 
+    // ==============================================================================
+    // ============================= STANZE DELLA CASA ==============================
+    // ==============================================================================
+
     // Quando si clicca su 'Stanze della casa':
     dom.querySelector('#rooms').addEventListener('click', async (e) => {
         e.preventDefault();
         dom.querySelector('.settings-view').classList.add('hidden');
         dom.querySelector('.rooms-settings-modal').classList.remove('hidden');
         dom.querySelector('.rooms-settings-modal').classList.add('fade-in');
+
+        // Recuperare tutte le stanze della casa
+        const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url=${house_url}`, {
+            method: 'GET', 
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            dom.querySelector('.toast').classList.remove('hidden');
+            dom.querySelector('#info').innerHTML = 'Errore durante il recupero delle stanze';
+
+            await sleep(3500);
+
+            dom.querySelector('.toast').classList.add('hidden');
+            dom.querySelector('#info').innerHTML = '';
+
+            return;
+        }
+        
+        renderRoomsList(data.rooms);
+        
     });
+
+    // eventLiseteners per 'Stanze della casa':
+    dom.querySelector('#create-room').addEventListener('click', async (e) => {
+        dom.querySelector('.rooms-settings-creation-modal').classList.remove('hidden');
+        dom.querySelector('.rooms-settings-creation-modal').classList.add('fade-in');
+    });
+
+    dom.querySelector('#confirm-room-creation', async (e) => {
+        const name = dom.querySelector('#room-name').textContent;
+        const house_url = localStorage.getItem('house_url');
+
+        const response = await fetch(`${PROXY_URL}/api/create_room`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                house_url: house_url
+            })
+        });
+
+        if (!response.ok) {
+            dom.querySelector('.toast').classList.remove('hidden');
+            dom.querySelector('#info').innerHTML = 'Errore durante la creazione della stanza';
+
+            await sleep(3500);
+
+            dom.querySelector('.toast').classList.add('hidden');
+            dom.querySelector('#info').innerHTML = '';
+
+            return;
+        }
+
+        dom.querySelector('.toast').classList.remove('hidden');
+        dom.querySelector('#info').innerHTML = 'Stanza creata';
+
+        await sleep(3500);
+
+        dom.querySelector('.rooms-settings-creation-modal').classList.add('hidden');
+
+        dom.querySelector('.toast').classList.add('hidden');
+        dom.querySelector('#info').innerHTML = '';
+
+        return;
+    });
+
+    // renders per 'Stanze della casa':
+    function renderRoomsList(rooms) {
+        const listContainer = dom.querySelector('.rooms-list-container');
+        listContainer.innerHTML = '';
+
+        rooms.forEach(room => {
+            const card = dom.createElement('div');
+            card.className = 'room-card';
+            card.innerHTML = `
+                <span class="settings-item-title">${room.name}</span>
+                <button type="button" id="confirm-room-creation">
+            `;
+            listContainer.appendChild(card);
+        });
+    }
+
+    // ==============================================================================
+    // ============================= SPAZZATURA =====================================
+    // ==============================================================================
 
     // Quando si clicca su 'Rotazione spazzatura':
     dom.querySelector('#trash').addEventListener('click', async (e) => {

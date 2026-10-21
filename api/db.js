@@ -238,9 +238,10 @@ export async function join_house(name, house_url) {
 
 export async function create_room(house_url, nome) {
     try {
+        const created_at = new Date().toISOString(); 
         await sql`
-            INSERT INTO rooms (house_url, nome)
-            VALUES (${house_url}, ${nome});
+            INSERT INTO rooms (house_url, nome, created_at)
+            VALUES (${house_url}, ${nome}, ${created_at});
         `;
 
         return {
@@ -261,7 +262,7 @@ export async function delete_room(house_url, name) {
         await sql`
             DELETE 
             FROM rooms
-            WHERE name = ${name} AND house_url = ${house_url}
+            WHERE nome = ${name} AND house_url = ${house_url}
         `;
 
         return {
@@ -269,6 +270,27 @@ export async function delete_room(house_url, name) {
             message: 'Stanza eliminata con successo'
         };
 
+    } catch (error) {
+        return {
+            succes: false,
+            error: error.message
+        };
+    }
+}
+
+export async function get_rooms(house_url) {
+    try {
+        const rows = await sql`
+            SELECT *
+            FROM rooms
+            WHERE house_url = ${house_url}
+        `;
+
+        const [rooms] = rows;
+        return {
+            succes: true,
+            rooms: rooms
+        };
     } catch (error) {
         return {
             succes: false,

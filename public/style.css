@@ -1114,6 +1114,84 @@ h1 + h2 {
 }
 
 /* ==========================================================================
+   Room Creation Container (Dashed / Empty State)
+   ========================================================================== */
+.rooms-list-container.creation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 110px;
+  padding: 20px;
+  margin: 12px 0;
+
+  /* Contorno tratteggiato con colore semitrasparente */
+  border: 2px dashed rgba(150, 205, 99, 0.4);
+  border-radius: var(--radius-md, 14px);
+
+  /* Sfondo glassmorphism dark coerente con le card */
+  background: rgba(17, 23, 14, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hover sull'intero contenitore tratteggiato */
+.rooms-list-container.creation:hover {
+  background: rgba(26, 36, 21, 0.65);
+  border-color: var(--color-secondary, #96cd63);
+  box-shadow: 0 0 16px -2px rgba(101, 163, 13, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Wrapper del bottone */
+.rooms-settings-modal-create-room {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Bottone di aggiunta stanza */
+.rooms-settings-modal-create-room button#create-room {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 10px 20px;
+  background: rgba(101, 163, 13, 0.15);
+  color: var(--color-secondary, #96cd63);
+
+  border: 1px solid rgba(150, 205, 99, 0.35);
+  border-radius: var(--radius-sm, 10px);
+
+  font-family: var(--font-heading, 'Inter', sans-serif);
+  font-size: var(--text-sm, 14px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Feedback visivo su hover e click del bottone */
+.rooms-list-container.creation:hover button#create-room,
+.rooms-settings-modal-create-room button#create-room:hover {
+  background: var(--color-secondary, #96cd63);
+  color: #0b0f09;
+  border-color: var(--color-secondary, #96cd63);
+  box-shadow: 0 4px 14px rgba(101, 163, 13, 0.35);
+}
+
+.rooms-settings-modal-create-room button#create-room:active {
+  transform: scale(0.96);
+}
+
+/* ==========================================================================
    Toast Notification (Login / Register)
    ========================================================================== */
 .toast {
