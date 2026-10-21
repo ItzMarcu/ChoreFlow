@@ -1,4 +1,4 @@
-import { PROXY_URL } from "./utils/const.js";
+import { PROXY_URL } from "./utils/utils.js";
 
 export function renderOnboarding() {
     const dom = document.createElement('div');

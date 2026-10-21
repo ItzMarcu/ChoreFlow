@@ -1,4 +1,4 @@
-import { PROXY_URL, sleep } from "./utils/const.js";
+import { PROXY_URL, sleep } from "./utils/utils.js";
 
 export function renderLogin() {
     const dom = document.createElement('div');
