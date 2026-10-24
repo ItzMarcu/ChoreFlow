@@ -69,13 +69,13 @@ export function renderLogin() {
 
         const data = await response.json();
 
-        if (!response.ok) {
+        if (!data.succes && data.message === 'Credenziali non trovate') {
             dom.querySelector('#login-button').disabled = false;
             dom.querySelector('#login-button').opacity = '1';
             dom.querySelector('#login-button').textContent = 'Accedi';
 
             dom.querySelector('.toast').classList.remove('hidden');
-            dom.querySelector('#info').innerHTML = 'Errore durante il login';
+            dom.querySelector('#info').innerHTML = 'Credenziali non trovate';
 
             await sleep(3500);
 
@@ -85,13 +85,13 @@ export function renderLogin() {
             return;
         }
 
-        if (!data.succes) {
+        if (!response.ok) {
             dom.querySelector('#login-button').disabled = false;
             dom.querySelector('#login-button').opacity = '1';
             dom.querySelector('#login-button').textContent = 'Accedi';
 
             dom.querySelector('.toast').classList.remove('hidden');
-            dom.querySelector('#info').innerHTML = 'Credenziali non valide';
+            dom.querySelector('#info').innerHTML = 'Errore del server';
 
             await sleep(3500);
 
