@@ -71,7 +71,7 @@ export function renderLogin() {
         console.log(data.error);
         console.log(response.status);
 
-        if (data.error == 'Credenziali non trovate') {
+        if (data.error == 'Credenziali non valide') {
             dom.querySelector('#login-button').disabled = false;
             dom.querySelector('#login-button').opacity = '1';
             dom.querySelector('#login-button').textContent = 'Accedi';
@@ -87,7 +87,7 @@ export function renderLogin() {
             return;
         }
 
-        if (response.status !== 201 && response.status !== 401) {
+        if (!response.ok && response.status !== 401) {
             dom.querySelector('#login-button').disabled = false;
             dom.querySelector('#login-button').opacity = '1';
             dom.querySelector('#login-button').textContent = 'Accedi';
