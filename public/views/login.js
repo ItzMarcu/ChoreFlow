@@ -86,7 +86,7 @@ export function renderLogin() {
             return;
         }
 
-        if (!response.ok) {
+        if (response.status !== 200 && response.status !== 401) {
             dom.querySelector('#login-button').disabled = false;
             dom.querySelector('#login-button').opacity = '1';
             dom.querySelector('#login-button').textContent = 'Accedi';
