@@ -38,7 +38,6 @@ export function renderLogin() {
         const password = dom.querySelector('input[type="password"]').value;
 
         if (!nome || !password) {
-            console.error('Credenziali non valide');
             dom.querySelector('#login-button').disabled = false;
             dom.querySelector('#login-button').opacity = '1';
             dom.querySelector('#login-button').textContent = 'Accedi';
@@ -86,7 +85,7 @@ export function renderLogin() {
             return;
         }
 
-        if (response.status !== 200 && response.status !== 401) {
+        if (response.status !== 201 && response.status !== 401) {
             dom.querySelector('#login-button').disabled = false;
             dom.querySelector('#login-button').opacity = '1';
             dom.querySelector('#login-button').textContent = 'Accedi';
