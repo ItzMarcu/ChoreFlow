@@ -70,7 +70,7 @@ export function renderLogin() {
         const data = await response.json();
         console.log(data);
 
-        if (data.error === 'Credenziali non trovate') {
+        if (data.error == 'Credenziali non trovate') {
             dom.querySelector('#login-button').disabled = false;
             dom.querySelector('#login-button').opacity = '1';
             dom.querySelector('#login-button').textContent = 'Accedi';
