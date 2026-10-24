@@ -68,6 +68,7 @@ export function renderLogin() {
         });
 
         const data = await response.json();
+        console.log(data);
 
         if (!data.succes && data.message === 'Credenziali non trovate') {
             dom.querySelector('#login-button').disabled = false;
