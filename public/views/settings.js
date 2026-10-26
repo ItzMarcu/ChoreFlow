@@ -115,7 +115,7 @@ export function renderSettings() {
         dom.querySelector('.rooms-settings-modal').classList.add('fade-in');
 
         const rooms = getRooms(localStorage.getItem('house_url'));
-        renderRoomsList(data.rooms);
+        renderRoomsList(rooms);
         
     });
 
