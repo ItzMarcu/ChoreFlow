@@ -1308,20 +1308,21 @@ h1 + h2 {
 
 /* Tenere sotto controllo */
 
-/* Contenitore pulsanti affiancati */
+/* Contenitore dei bottoni */
 .rooms-settings-creation-modal-buttons {
   display: flex;
-  align-items: center;
+  align-items: stretch; /* Allinea e forza identica altezza su entrambi */
   justify-content: center;
   gap: 12px;
   width: 100%;
   margin-top: 6px;
 }
 
-/* Base comune pulsanti del form */
+/* Stile base comune a ENTRAMBI i bottoni */
 .rooms-settings-creation-modal-buttons button {
   flex: 1;
   height: 42px;
+  box-sizing: border-box; /* Include padding e border nei 42px esatti */
   padding: 0 16px;
   border-radius: var(--radius-sm, 8px);
   font-family: var(--font-heading, 'Inter', sans-serif);
@@ -1329,34 +1330,27 @@ h1 + h2 {
   font-weight: 600;
   cursor: pointer;
   user-select: none;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 1; /* Previene disallineamenti di baseline del font */
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Pulsante Indietro / Annulla con classe important (stile soft danger/ghost) */
+/* Bottone Indietro */
 .rooms-settings-creation-modal-buttons button#back.important {
   background: rgba(239, 68, 68, 0.1);
   color: #fca5a5;
   border: 1px solid rgba(239, 68, 68, 0.35);
 }
 
-.rooms-settings-creation-modal-buttons button#back.important:hover {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.6);
-  color: #ffffff;
-}
-
-.rooms-settings-creation-modal-buttons button#back.important:active {
-  transform: scale(0.97);
-}
-
-/* Pulsante Crea la stanza (azione primaria verde) */
+/* Bottone Crea la stanza */
 .rooms-settings-creation-modal-buttons button#confirm-room-creation {
   background-color: var(--color-primary, #65a30d);
   color: #090c07;
-  border: none;
+  /* Metti un bordo trasparente di 1px per pareggiare al millimetro il box model */
+  border: 1px solid transparent; 
   box-shadow: 0 4px 14px rgba(101, 163, 13, 0.35);
 }
 
