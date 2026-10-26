@@ -1167,12 +1167,6 @@ h1 + h2 {
   color: #0b0f09;
 }
 
-.rooms-settings-creation-modal-buttons {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 /* ==========================================================================
    Room Creation Modal (Overlay & Card standard - not important)
    ========================================================================== */
@@ -1312,9 +1306,10 @@ h1 + h2 {
   transform: scale(0.97);
 }
 
-/* Nasconde la freccia orfana se presente nell'HTML */
-.create-house-confirmation > .settings-arrow {
-  display: none;
+.rooms-settings-creation-modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* ==========================================================================
