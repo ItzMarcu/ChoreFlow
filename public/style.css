@@ -1306,10 +1306,58 @@ h1 + h2 {
   transform: scale(0.97);
 }
 
+/* Tenere sotto controllo */
+
+/* Contenitore pulsanti affiancati */
 .rooms-settings-creation-modal-buttons {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 6px;
+}
+
+/* Base comune pulsanti del form */
+.rooms-settings-creation-modal-buttons button {
+  flex: 1;
+  height: 42px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm, 8px);
+  font-family: var(--font-heading, 'Inter', sans-serif);
+  font-size: var(--text-sm, 14px);
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Pulsante Indietro / Annulla con classe important (stile soft danger/ghost) */
+.rooms-settings-creation-modal-buttons button#back.important {
+  background: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.rooms-settings-creation-modal-buttons button#back.important:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.6);
+  color: #ffffff;
+}
+
+.rooms-settings-creation-modal-buttons button#back.important:active {
+  transform: scale(0.97);
+}
+
+/* Pulsante Crea la stanza (azione primaria verde) */
+.rooms-settings-creation-modal-buttons button#confirm-room-creation {
+  background-color: var(--color-primary, #65a30d);
+  color: #090c07;
+  border: none;
+  box-shadow: 0 4px 14px rgba(101, 163, 13, 0.35);
 }
 
 /* ==========================================================================
