@@ -141,12 +141,13 @@ export function renderSettings() {
         
     });
 
-    // eventLiseteners per 'Stanze della casa':
+    // Attiva il modal per creare una nuova stanza:  
     dom.querySelector('#create-room').addEventListener('click', async (e) => {
         dom.querySelector('.rooms-settings-creation-modal').classList.remove('hidden');
         dom.querySelector('.rooms-settings-creation-modal').classList.add('fade-in');
     });
 
+    // Quando si preme su 'Crea', nel modal di creazione stanza:
     dom.querySelector('#confirm-room-creation').addEventListener('click', async (e) => {
         const name = dom.querySelector('#room-name').value.trim();
         const house_url = localStorage.getItem('house_url');
