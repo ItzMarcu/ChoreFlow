@@ -65,8 +65,8 @@ export function renderSettings() {
 
         <div class="rooms-settings-creation-modal hidden">
             <h3>Aggiungi una nuova stanza</h3>
+            <span class="settings-arrow">→</span>    
             <div class="create-house-confirmation">
-                <span class="settings-arrow">→</span>    
                 <span class="settings-item-title"> Come si chiama questa stanza?</span>
                 <p class="settings-item-desc">Potrai modificare i dettagli in seguito</p>
                 <input type="text" placeholder="Bagno" id="room-name" required>
