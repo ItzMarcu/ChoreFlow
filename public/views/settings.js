@@ -114,32 +114,7 @@ export function renderSettings() {
         dom.querySelector('.rooms-settings-modal').classList.remove('hidden');
         dom.querySelector('.rooms-settings-modal').classList.add('fade-in');
 
-        // Recuperare tutte le stanze della casa
-        const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url=${localStorage.getItem('house_url')}`, {
-            method: 'GET', 
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-            dom.querySelector('.toast').classList.remove('hidden');
-            dom.querySelector('#info').innerHTML = 'Errore durante il recupero delle stanze';
-
-            await sleep(3500);
-
-            dom.querySelector('.toast').classList.add('hidden');
-            dom.querySelector('#info').innerHTML = '';
-
-            return;
-        }
-        
-        if (!data.rooms) {
-            return;
-        }
-
+        const rooms = getRooms(localStorage.getItem('house_url'));
         renderRoomsList(data.rooms);
         
     });
@@ -152,6 +127,7 @@ export function renderSettings() {
 
     // Quando si preme su 'Crea', nel modal di creazione stanza:
     dom.querySelector('#confirm-room-creation').addEventListener('click', async (e) => {
+        e.preventDefault();
         const name = dom.querySelector('#room-name').value.trim();
         const house_url = localStorage.getItem('house_url');
 
@@ -178,6 +154,14 @@ export function renderSettings() {
 
             return;
         }
+
+        // Aggiorna le stanze della casa: 
+        const rooms = await getRooms(localStorage.getItem('house_url'));
+        if (rooms) {
+            renderRoomsList(rooms);
+        }
+
+        dom.querySelector('.rooms-settings-creation-modal').classList.add('hidden');
 
         dom.querySelector('.toast').classList.remove('hidden');
         dom.querySelector('#info').innerHTML = 'Stanza creata';
@@ -330,7 +314,38 @@ export function renderSettings() {
         });
     });
 
-    
+    // ==============================================================================
+    // ========================== UTILS =============================================
+    // ==============================================================================
+
+    async function getRooms(house_url) {
+        const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url=${house_url}`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            console.error('Errore durante il recupero delle stanze');
+
+            // toast: 
+            dom.querySelector('.toast').classList.remove('hidden');
+            dom.querySelector('#info').innerHTML = 'Errore durante il recupero delle stanze';
+            
+            await sleep(3500);
+
+            dom.querySelector('.toast').classList.add('hidden');
+            dom.querySelector('#info').innerHTML = '';
+
+            return;
+        }
+
+        const [rooms] = data;
+        return rooms;
+    }
 
 
     return dom;
