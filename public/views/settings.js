@@ -144,6 +144,8 @@ export function renderSettings() {
         });
 
         if (!response.ok) {
+            dom.querySelector('.rooms-settings-creation-modal').classList.add('hidden');
+
             dom.querySelector('.toast').classList.remove('hidden');
             dom.querySelector('#info').innerHTML = 'Errore durante la creazione della stanza';
 
@@ -155,13 +157,13 @@ export function renderSettings() {
             return;
         }
 
+        dom.querySelector('.rooms-settings-creation-modal').classList.add('hidden');
+
         // Aggiorna le stanze della casa: 
         const rooms = await getRooms(localStorage.getItem('house_url'));
         if (rooms) {
             renderRoomsList(rooms);
         }
-
-        dom.querySelector('.rooms-settings-creation-modal').classList.add('hidden');
 
         dom.querySelector('.toast').classList.remove('hidden');
         dom.querySelector('#info').innerHTML = 'Stanza creata';
