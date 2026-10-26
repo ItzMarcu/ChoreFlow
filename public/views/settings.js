@@ -70,8 +70,8 @@ export function renderSettings() {
                 <p class="settings-item-desc">Potrai modificare i dettagli in seguito</p>
                 <input type="text" placeholder="Bagno" id="room-name" required>
                 
+                <button type="button" id="back" class="important">Indietro</button>
                 <button type="button" id="confirm-room-creation">Crea la stanza!</button>
-                <button type="button" class="btn-back"> ← Torna alla dashboard</button> 
             </div>
         </div>
 
@@ -187,6 +187,12 @@ export function renderSettings() {
         dom.querySelector('.toast').classList.add('hidden');
         dom.querySelector('#info').innerHTML = '';
 
+        return;
+    });
+
+    // Pulsante per uscire dal .room-settings-creation-modal: 
+    dom.querySelector('#back').addEventListener('click', (e) => {
+        dom.querySelector('.rooms-settings-creation-modal').classList.add('hidden');
         return;
     });
 
