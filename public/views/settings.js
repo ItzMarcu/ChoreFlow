@@ -343,7 +343,7 @@ export function renderSettings() {
             return;
         }
 
-        const rooms = data.rooms;
+        const [rooms] = data;
         return rooms;
     }
 
