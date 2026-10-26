@@ -65,7 +65,7 @@ export function renderSettings() {
 
         <div class="rooms-settings-creation-modal hidden">
             <h3>Aggiungi una nuova stanza</h3>
-            <span class="settings-arrow">→</span>    
+            <button type="button" class="btn-back"> ← Torna alla dashboard</button> 
             <div class="create-house-confirmation">
                 <span class="settings-item-title"> Come si chiama questa stanza?</span>
                 <p class="settings-item-desc">Potrai modificare i dettagli in seguito</p>
@@ -315,7 +315,8 @@ export function renderSettings() {
             dom.querySelector('.settings-view').classList.remove('hidden');
             dom.querySelector('.rooms-settings-modal').classList.add('hidden');
             dom.querySelector('.trash-settings-modal').classList.add('hidden');
-
+            dom.querySelector('.rooms-settings-creation-modal').classList.add('hidden');
+            
             return;
         });
     });
