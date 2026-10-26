@@ -1166,6 +1166,13 @@ h1 + h2 {
   background: #96cd63;
   color: #0b0f09;
 }
+
+.rooms-settings-creation-modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 /* ==========================================================================
    Room Creation Modal (Overlay & Card standard - not important)
    ========================================================================== */
@@ -1182,9 +1189,9 @@ h1 + h2 {
   justify-content: center;
   padding: 20px;
 
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: transparent;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 
   animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

@@ -70,8 +70,10 @@ export function renderSettings() {
                 <p class="settings-item-desc">Potrai modificare i dettagli in seguito</p>
                 <input type="text" placeholder="Bagno" id="room-name" required>
                 
-                <button type="button" id="back" class="important">Indietro</button>
-                <button type="button" id="confirm-room-creation">Crea la stanza!</button>
+                <div class="rooms-settings-creation-modal-buttons> 
+                    <button type="button" id="back" class="important">Indietro</button>
+                    <button type="button" id="confirm-room-creation">Crea la stanza!</button>
+                </div>
             </div>
         </div>
 
