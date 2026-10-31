@@ -233,7 +233,6 @@ export function renderSettings() {
         if (!response.ok) {
             console.error('Errore durante il recupero delle stanze');
 
-            // toast: 
             dom.querySelector('.toast').classList.remove('hidden');
             dom.querySelector('#info').innerHTML = 'Errore durante il recupero delle stanze';
             
@@ -245,7 +244,7 @@ export function renderSettings() {
             return;
         }
 
-        const [rooms] = data;
+        const [rooms] = data.rooms;
         return rooms;
     }
 
