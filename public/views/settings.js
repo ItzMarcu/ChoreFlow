@@ -213,8 +213,8 @@ export function renderSettings() {
             const card = dom.createElement('div');
             card.className = 'room-card';
             card.innerHTML = `
-                <span class="settings-item-title">${room.name}</span>
-                <button type="button" id="confirm-room-creation">
+                <span class="settings-item-title">${room.nome}</span>
+                <button type="button" id="delete-room" name="${room.nome}">X</button>
             `;
             listContainer.appendChild(card);
         });
