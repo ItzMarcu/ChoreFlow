@@ -67,9 +67,6 @@ export function renderLogin() {
         });
 
         const data = await response.json();
-        console.log(data);
-        console.log(data.error);
-        console.log(response.status);
 
         if (data.error == 'Credenziali non valide') {
             dom.querySelector('#login-button').disabled = false;

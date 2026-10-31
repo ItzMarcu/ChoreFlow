@@ -289,7 +289,7 @@ export async function get_rooms(house_url) {
         const [rooms] = rows;
         return {
             succes: true,
-            rooms: rooms
+            rooms: [rooms]
         };
     } catch (error) {
         return {
