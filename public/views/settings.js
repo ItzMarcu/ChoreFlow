@@ -131,8 +131,7 @@ export function renderSettings() {
         });
 
         const data = await response.json();
-
-        console.log(data); // da eliminare
+        console.log("Response di /api/get_rooms?house_url=" + data); // da eliminare
         
         if (!response.ok) {
             dom.querySelector('.toast').classList.remove('hidden');
