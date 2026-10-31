@@ -114,8 +114,39 @@ export function renderSettings() {
         dom.querySelector('.rooms-settings-modal').classList.remove('hidden');
         dom.querySelector('.rooms-settings-modal').classList.add('fade-in');
 
+<<<<<<< HEAD
         const rooms = getRooms(localStorage.getItem('house_url'));
         renderRoomsList(rooms);
+=======
+        // Recuperare tutte le stanze della casa
+        const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url=${localStorage.getItem('house_url')}`, {
+            method: 'GET', 
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            dom.querySelector('.toast').classList.remove('hidden');
+            dom.querySelector('#info').innerHTML = 'Errore durante il recupero delle stanze';
+
+            await sleep(3500);
+
+            dom.querySelector('.toast').classList.add('hidden');
+            dom.querySelector('#info').innerHTML = '';
+
+            return;
+        }
+        
+        if (!data.rooms) {
+            return;
+        }
+
+        localStorage.setItem('rooms', data.rooms);
+        renderRoomsList(data.rooms);
+>>>>>>> 8c9bcc0 (ChoreFlow: Login/Register, UI/UX and backend)
         
     });
 
