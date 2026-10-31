@@ -120,11 +120,11 @@ export function renderSettings() {
         }
 
         console.info('Recupero stanze'); // Riga da eliminare necessaria per il debug
-        
+
         const rooms = getRooms(localStorage.getItem('house_url'));
         renderRoomsList(rooms);
         // Recuperare tutte le stanze della casa
-        const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url=${localStorage.getItem('house_url')}`, {
+        const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url="${localStorage.getItem('house_url')}"`, {
             method: 'GET', 
             credentials: 'include',
             headers: {
