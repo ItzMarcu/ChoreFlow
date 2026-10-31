@@ -114,10 +114,8 @@ export function renderSettings() {
         dom.querySelector('.rooms-settings-modal').classList.remove('hidden');
         dom.querySelector('.rooms-settings-modal').classList.add('fade-in');
 
-<<<<<<< HEAD
         const rooms = getRooms(localStorage.getItem('house_url'));
         renderRoomsList(rooms);
-=======
         // Recuperare tutte le stanze della casa
         const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url=${localStorage.getItem('house_url')}`, {
             method: 'GET', 
@@ -146,7 +144,6 @@ export function renderSettings() {
 
         localStorage.setItem('rooms', data.rooms);
         renderRoomsList(data.rooms);
->>>>>>> 8c9bcc0 (ChoreFlow: Login/Register, UI/UX and backend)
         
     });
 
