@@ -221,7 +221,7 @@ export function renderSettings() {
     }
     // recupera le stanze dato un 'house_url':
     async function getRooms(house_url) {
-        const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url=${house_url}`, {
+        const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url="${house_url}"`, {
             method: 'GET',
             credentials: 'include',
             headers: {
