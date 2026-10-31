@@ -241,10 +241,10 @@ export function renderSettings() {
             dom.querySelector('.toast').classList.add('hidden');
             dom.querySelector('#info').innerHTML = '';
 
-            return;
+            return [];
         }
 
-        const [rooms] = data.rooms;
+        const rooms = data.rooms;
         return rooms;
     }
 
