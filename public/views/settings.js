@@ -122,7 +122,7 @@ export function renderSettings() {
         const rooms = getRooms(localStorage.getItem('house_url'));
         renderRoomsList(rooms);
         // Recuperare tutte le stanze della casa
-        const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url="${localStorage.getItem('house_url')}"`, {
+        const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url=${localStorage.getItem('house_url')}`, {
             method: 'GET', 
             credentials: 'include',
             headers: {
@@ -132,7 +132,7 @@ export function renderSettings() {
 
         const data = await response.json();
 
-        console.debug(data); // da eliminare
+        console.log(data); // da eliminare
         
         if (!response.ok) {
             dom.querySelector('.toast').classList.remove('hidden');
