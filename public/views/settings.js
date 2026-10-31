@@ -114,6 +114,13 @@ export function renderSettings() {
         dom.querySelector('.rooms-settings-modal').classList.remove('hidden');
         dom.querySelector('.rooms-settings-modal').classList.add('fade-in');
 
+        if (localStorage.getItem('rooms')) {
+            renderRoomsList(localStorage.getItem('rooms'));
+            return;
+        }
+
+        console.info('Recupero stanze'); // Riga da eliminare necessaria per il debug
+        
         const rooms = getRooms(localStorage.getItem('house_url'));
         renderRoomsList(rooms);
         // Recuperare tutte le stanze della casa
