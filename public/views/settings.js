@@ -119,8 +119,6 @@ export function renderSettings() {
             return;
         }
 
-        console.info('Recupero stanze'); // Riga da eliminare necessaria per il debug
-
         const rooms = getRooms(localStorage.getItem('house_url'));
         renderRoomsList(rooms);
         // Recuperare tutte le stanze della casa
@@ -133,6 +131,9 @@ export function renderSettings() {
         });
 
         const data = await response.json();
+
+        console.debug(data); // da eliminare
+        
         if (!response.ok) {
             dom.querySelector('.toast').classList.remove('hidden');
             dom.querySelector('#info').innerHTML = 'Errore durante il recupero delle stanze';
