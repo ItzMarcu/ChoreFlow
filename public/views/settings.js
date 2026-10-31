@@ -119,17 +119,8 @@ export function renderSettings() {
             return;
         }
 
-        const rooms = getRooms(localStorage.getItem('house_url'));
-        renderRoomsList(rooms);
         // Recuperare tutte le stanze della casa
-        const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url=${localStorage.getItem('house_url')}`, {
-            method: 'GET', 
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
+        const response = await getRooms(localStorage.getItem('house_url'));
         const data = await response.json();
         console.log("Response di /api/get_rooms?house_url=" + data); // da eliminare
         
