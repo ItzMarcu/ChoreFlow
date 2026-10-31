@@ -120,29 +120,23 @@ export function renderSettings() {
         }
 
         // Recuperare tutte le stanze della casa
-        const response = await getRooms(localStorage.getItem('house_url'));
-        const data = await response.json();
+        const rooms = await getRooms(localStorage.getItem('house_url'));
         console.log("Response di /api/get_rooms?house_url=" + data); // da eliminare
         
-        if (!response.ok) {
+        if (!rooms) {
             dom.querySelector('.toast').classList.remove('hidden');
-            dom.querySelector('#info').innerHTML = 'Errore durante il recupero delle stanze';
+            dom.querySelector('#info').innerHTML = 'Errore durante il recupero delle case';
 
             await sleep(3500);
 
             dom.querySelector('.toast').classList.add('hidden');
-            dom.querySelector('#info').innerHTML = '';
+            dom.querySelector('#info').innerHTML = "";
 
             return;
         }
-        
-        if (!data.rooms) {
-            return;
-        }
 
-        localStorage.setItem('rooms', data.rooms);
-        renderRoomsList(data.rooms);
-        
+        localStorage.setItem('rooms', rooms);
+        renderRoomsList(rooms);
     });
 
     // Attiva il modal per creare una nuova stanza:  
@@ -224,6 +218,35 @@ export function renderSettings() {
             `;
             listContainer.appendChild(card);
         });
+    }
+    // recupera le stanze dato un 'house_url':
+    async function getRooms(house_url) {
+        const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url=${house_url}`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            console.error('Errore durante il recupero delle stanze');
+
+            // toast: 
+            dom.querySelector('.toast').classList.remove('hidden');
+            dom.querySelector('#info').innerHTML = 'Errore durante il recupero delle stanze';
+            
+            await sleep(3500);
+
+            dom.querySelector('.toast').classList.add('hidden');
+            dom.querySelector('#info').innerHTML = '';
+
+            return;
+        }
+
+        const [rooms] = data;
+        return rooms;
     }
 
     // ==============================================================================
@@ -345,35 +368,6 @@ export function renderSettings() {
     // ==============================================================================
     // ========================== UTILS =============================================
     // ==============================================================================
-
-    async function getRooms(house_url) {
-        const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url=${house_url}`, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-            console.error('Errore durante il recupero delle stanze');
-
-            // toast: 
-            dom.querySelector('.toast').classList.remove('hidden');
-            dom.querySelector('#info').innerHTML = 'Errore durante il recupero delle stanze';
-            
-            await sleep(3500);
-
-            dom.querySelector('.toast').classList.add('hidden');
-            dom.querySelector('#info').innerHTML = '';
-
-            return;
-        }
-
-        const [rooms] = data;
-        return rooms;
-    }
 
 
     return dom;
