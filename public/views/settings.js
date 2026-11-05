@@ -209,7 +209,7 @@ export function renderSettings() {
         const listContainer = dom.querySelector('.rooms-list-container');
         listContainer.innerHTML = '';
 
-        console.log("rooms in renderRoomsList: ", rooms);
+        console.log("rooms in renderRoomsList: ", typeof rooms);
 
         rooms.forEach(room => {
             const card = dom.createElement('div');
