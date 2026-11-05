@@ -181,6 +181,7 @@ export function renderSettings() {
 
         // Aggiorna le stanze della casa: 
         const rooms = await getRooms(localStorage.getItem('house_url'));
+        console.log("rooms in #confirm-room-creation event listener: ", typeof rooms);
         if (rooms) {
             renderRoomsList(rooms);
         }
@@ -208,8 +209,6 @@ export function renderSettings() {
     function renderRoomsList(rooms) {
         const listContainer = dom.querySelector('.rooms-list-container');
         listContainer.innerHTML = '';
-
-        console.log("rooms in renderRoomsList: ", typeof rooms);
 
         rooms.forEach(room => {
             const card = dom.createElement('div');
