@@ -286,10 +286,9 @@ export async function get_rooms(house_url) {
             WHERE house_url = ${house_url};
         `;
 
-        const [rooms] = rows;
         return {
             succes: true,
-            rooms: rooms
+            rooms: rows
         };
     } catch (error) {
         return {
