@@ -180,7 +180,7 @@ export function renderSettings() {
         dom.querySelector('.rooms-settings-creation-modal').classList.add('hidden');
 
         // Aggiorna le stanze della casa: 
-        const rooms = await getRooms(JSON.parse(localStorage.getItem('house_url')));
+        const rooms = await getRooms(localStorage.getItem('house_url'));
         if (rooms) {
             renderRoomsList(rooms);
         }
