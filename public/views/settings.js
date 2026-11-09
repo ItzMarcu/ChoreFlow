@@ -214,11 +214,49 @@ export function renderSettings() {
             card.className = 'room-card';
             card.innerHTML = `
                 <span class="settings-item-title">${room.nome}</span>
-                <button type="button" id="delete-room" name="${room.nome}">X</button>
+                <button type="button" class="delete-room-btn" data-room-name="${room.nome}">X</button>
             `;
+
+            card.querySelector('.delete-room-btn').addEventListener('click', async (e) => {
+                e.preventDefault();
+                // fetch per eliminare la stanza: 
+                const response = await fetch(`${PROXY_URL}/api/delete_room`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: e.target.getAttribute('data-room-name'),
+                        house_url: localStorage.getItem('house_url')
+                    })
+                });
+
+                if (!response.ok) {
+                    dom.querySelector('.toast').classList.remove('hidden');
+                    dom.querySelector('#info').innerHTML = "Errore durante l'eliminazione della stanza";
+
+                    await sleep(3500);
+
+                    dom.querySelector('.toast').classList.add('hidden');
+                    dom.querySelector('#info').innerHTML = "";
+
+                    return;
+                }
+
+                dom.querySelector('.toast').classList.remove('hidden');
+                dom.querySelector('#info').innerHTML = "Stanza eliminata con successo";
+
+                await sleep(3500);
+
+                dom.querySelector('.toast').classList.add('hidden');
+                dom.querySelector('#info').innerHTML = "";
+            });
+
             listContainer.appendChild(card);
         });
     }
+
     // recupera le stanze dato un 'house_url':
     async function getRooms(house_url) {
         const response = await fetch(`${PROXY_URL}/api/get_rooms?house_url=${house_url}`, {
