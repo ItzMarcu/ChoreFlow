@@ -245,7 +245,7 @@ export function renderSettings() {
             return [];
         }
 
-        const rooms = data.rooms;
+        const rooms = data.rooms ?? [];
         return rooms;
     }
 
