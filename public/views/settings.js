@@ -121,7 +121,7 @@ export function renderSettings() {
 
         // Recuperare tutte le stanze della casa
         const rooms = await getRooms(localStorage.getItem('house_url'));
-        console.log("Response di /api/get_rooms?house_url=" + rooms); // da eliminare
+        localStorage.setItem('rooms', rooms);
         
         if (!rooms) {
             dom.querySelector('.toast').classList.remove('hidden');
