@@ -283,7 +283,7 @@ export async function get_rooms(house_url) {
         const rows = await sql`
             SELECT *
             FROM rooms
-            WHERE house_url = '${house_url}';
+            WHERE house_url = ${house_url};
         `;
 
         const [rooms] = rows;
