@@ -210,7 +210,7 @@ export function renderSettings() {
         listContainer.innerHTML = '';
 
         rooms.forEach(room => {
-            const card = dom.createElement('div');
+            const card = dom.appendChild(document.createElement('div')); 
             card.className = 'room-card';
             card.innerHTML = `
                 <span class="settings-item-title">${room.nome}</span>
