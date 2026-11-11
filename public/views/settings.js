@@ -50,7 +50,7 @@ export function renderSettings() {
             </div>
         </div>
 
-        <!-- Crea/Elimina una stanza -->
+        <!-- CREA/ELIMINA UNA STANZA -->
         <div class="rooms-settings-modal hidden">
         <h3>Le stanze della casa</h3>
         <button type="button" class="btn-back"> ← Torna alla dashboard</button>
@@ -146,10 +146,16 @@ export function renderSettings() {
     });
 
     // Quando si preme su 'Crea', nel modal di creazione stanza:
+    // crea una stanza
     dom.querySelector('#confirm-room-creation').addEventListener('click', async (e) => {
         e.preventDefault();
         const name = dom.querySelector('#room-name').value.trim();
         const house_url = localStorage.getItem('house_url');
+
+        // animazione di caricamento e disable del button per la deduplica:
+        dom.querySelector('#confirm-room-creation').disabled = true;
+        dom.querySelector('#confirm-room-creation').opacity = 0.7;
+        dom.querySelector('#confirm-room-creation').textContent = 'Creazione in corso!';
 
         const response = await fetch(`${PROXY_URL}/api/create_room`, {
             method: 'POST',
@@ -164,6 +170,10 @@ export function renderSettings() {
         });
 
         if (!response.ok) {
+            dom.querySelector('#confirm-room-creation').disabled = false;
+            dom.querySelector('#confirm-room-creation').opacity = 1;
+            dom.querySelector('#confirm-room-creation').textContent = 'Crea';
+            
             dom.querySelector('.rooms-settings-creation-modal').classList.add('hidden');
 
             dom.querySelector('.toast').classList.remove('hidden');
@@ -176,14 +186,15 @@ export function renderSettings() {
 
             return;
         }
-
+    
+        dom.querySelector('#confirm-room-creation').disabled = false;
+        dom.querySelector('#confirm-room-creation').textContent = 'Crea';
+        dom.querySelector('#confirm-room-creation').opacity = 1;
+        
         dom.querySelector('.rooms-settings-creation-modal').classList.add('hidden');
 
         // Aggiorna le stanze della casa: 
-        const rooms = await getRooms(localStorage.getItem('house_url'));
-        if (rooms) {
-            renderRoomsList(rooms);
-        }
+        renderRoomsList(JSON.parse(localStorage.getItem('rooms')));
 
         dom.querySelector('.toast').classList.remove('hidden');
         dom.querySelector('#info').innerHTML = 'Stanza creata';
@@ -283,6 +294,7 @@ export function renderSettings() {
         }
 
         const rooms = data.rooms ?? [];
+        localStorage.setItem('rooms', JSON.stringify(rooms));
         return rooms;
     }
 
