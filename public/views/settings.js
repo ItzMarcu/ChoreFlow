@@ -212,30 +212,30 @@ export function renderSettings() {
     });
 
     // renders per 'Stanze della casa':
+    // TODO: Aggiungere logica di edit 
     function renderRoomsList(rooms) {
         const listContainer = dom.querySelector('.rooms-list-container');
         listContainer.innerHTML = '';
-
         rooms.forEach(room => {
             const card = dom.appendChild(document.createElement('div')); 
             card.className = 'room-card';
-            // TODO: Aggiungere logica di edit 
             card.innerHTML = `
                 <span class="settings-item-title">${room.nome}</span>
-                <button type="button" class="edit-room-btn" data-room-name="${room.name}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M12 20h9"></path>
-                      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                    </svg>
-                </button>
-                <button type="button" class="delete-room-btn" data-room-name="${room.nome}">X</button>
+                <div>
+                    <button type="button" class="edit-room-btn" data-room-name="${room.name}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M12 20h9"></path>
+                          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                    </button>
+                    <button type="button" class="delete-room-btn" data-room-name="${room.nome}">X</button>
+                </div>
             `;
 
             card.querySelector('.edit-room-btn').addEventListener('click', async (e) => {
                 e.preventDefault();
                 // Modificare interfaccia in modo da cambiare il nome
-                
-
+                // Trasformare span in un input 
                 const new_name = "";
                 const response = await fetch(`${PROXY_URL}/api/edit_room`, {
                     method: 'POST', 
@@ -245,7 +245,7 @@ export function renderSettings() {
                     },
                     body: JSON.stringify({
                         name: e.target.getAttribute('data-room-name'),
-                        new_name: new_name, // Trovare modo per inserirlo in modo carino ed efficiente
+                        new_name: new_name, 
                         house_url: localStorage.getItem('house_url')
                     })
                 });
@@ -262,6 +262,7 @@ export function renderSettings() {
                     return;
                 }
 
+                // Far tornare la card normale, togliere input e mettere span
                 renderRoomsList(await getRooms(localStorage.getItem('house_url')));
                 dom.querySelector('.toast').classList.remove('hidden');
                 dom.querySelector('#info').innerHTML = "Stanza eliminata con successo";
