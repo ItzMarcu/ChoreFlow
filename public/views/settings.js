@@ -128,7 +128,7 @@ export function renderSettings() {
 
             return;
         }
-        
+
         renderRoomsList(rooms);
     });
 
@@ -188,6 +188,9 @@ export function renderSettings() {
 
         // Aggiorna le stanze della casa: 
         renderRoomsList(getRooms(localStorage.getItem('house_url')));
+        dom.querySelector('.rooms-settings-modal').classList.add('hidden');        
+        dom.querySelector('.rooms-settings-modal').classList.remove('hidden');
+
 
         dom.querySelector('.toast').classList.remove('hidden');
         dom.querySelector('#info').innerHTML = 'Stanza creata';
