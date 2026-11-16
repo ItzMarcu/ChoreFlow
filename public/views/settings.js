@@ -114,14 +114,8 @@ export function renderSettings() {
         dom.querySelector('.rooms-settings-modal').classList.remove('hidden');
         dom.querySelector('.rooms-settings-modal').classList.add('fade-in');
 
-        if (localStorage.getItem('rooms')) {
-            renderRoomsList(JSON.parse(localStorage.getItem('rooms')));
-            return;
-        }
-
         // Recuperare tutte le stanze della casa
         const rooms = await getRooms(localStorage.getItem('house_url'));
-        localStorage.setItem('rooms', rooms);
         
         if (!rooms) {
             dom.querySelector('.toast').classList.remove('hidden');
@@ -134,8 +128,7 @@ export function renderSettings() {
 
             return;
         }
-
-        localStorage.setItem('rooms', JSON.stringify(rooms));
+        
         renderRoomsList(rooms);
     });
 
@@ -194,7 +187,7 @@ export function renderSettings() {
         dom.querySelector('.rooms-settings-creation-modal').classList.add('hidden');
 
         // Aggiorna le stanze della casa: 
-        renderRoomsList(JSON.parse(localStorage.getItem('rooms')));
+        renderRoomsList(getRooms(localStorage.getItem('house_url')));
 
         dom.querySelector('.toast').classList.remove('hidden');
         dom.querySelector('#info').innerHTML = 'Stanza creata';
