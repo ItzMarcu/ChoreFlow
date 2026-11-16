@@ -187,7 +187,7 @@ export function renderSettings() {
         dom.querySelector('.rooms-settings-creation-modal').classList.add('hidden');
 
         // Aggiorna le stanze della casa: 
-        renderRoomsList(getRooms(localStorage.getItem('house_url')));
+        renderRoomsList(await getRooms(localStorage.getItem('house_url')));
         dom.querySelector('.rooms-settings-modal').classList.add('hidden');        
         dom.querySelector('.rooms-settings-modal').classList.remove('hidden');
 
@@ -219,6 +219,7 @@ export function renderSettings() {
         rooms.forEach(room => {
             const card = dom.appendChild(document.createElement('div')); 
             card.className = 'room-card';
+            // TODO: Aggiungere logica di edit 
             card.innerHTML = `
                 <span class="settings-item-title">${room.nome}</span>
                 <button type="button" class="edit-room-btn" data-room-name="${room.name}">
@@ -229,6 +230,47 @@ export function renderSettings() {
                 </button>
                 <button type="button" class="delete-room-btn" data-room-name="${room.nome}">X</button>
             `;
+
+            card.querySelector('.edit-room-btn').addEventListener('click', async (e) => {
+                e.preventDefault();
+                // Modificare interfaccia in modo da cambiare il nome
+                
+
+                const new_name = "";
+                const response = await fetch(`${PROXY_URL}/api/edit_room`, {
+                    method: 'POST', 
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: e.target.getAttribute('data-room-name'),
+                        new_name: new_name, // Trovare modo per inserirlo in modo carino ed efficiente
+                        house_url: localStorage.getItem('house_url')
+                    })
+                });
+
+                if (!response.ok) {
+                    dom.querySelector('.toast').classList.remove('hidden');
+                    dom.querySelector('#info').innerHTML = "Errore durante la modifica della stanza";
+
+                    await sleep(3500);
+
+                    dom.querySelector('.toast').classList.add('hidden');
+                    dom.querySelector('#info').innerHTML = "";
+
+                    return;
+                }
+
+                renderRoomsList(await getRooms(localStorage.getItem('house_url')));
+                dom.querySelector('.toast').classList.remove('hidden');
+                dom.querySelector('#info').innerHTML = "Stanza eliminata con successo";
+
+                await sleep(3500);
+
+                dom.querySelector('.toast').classList.add('hidden');
+                dom.querySelector('#info').innerHTML = "";
+            });
 
             card.querySelector('.delete-room-btn').addEventListener('click', async (e) => {
                 e.preventDefault();
@@ -256,7 +298,8 @@ export function renderSettings() {
 
                     return;
                 }
-
+                
+                renderRoomsList(await getRooms(localStorage.getItem('house_url')));
                 dom.querySelector('.toast').classList.remove('hidden');
                 dom.querySelector('#info').innerHTML = "Stanza eliminata con successo";
 

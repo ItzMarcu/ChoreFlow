@@ -10,7 +10,8 @@ import {
     login,
     create_room,
     delete_room,
-    get_rooms
+    get_rooms,
+    edit_room
 } from './db.js';
 
 // node.js modules 
@@ -287,6 +288,25 @@ export default async function handler(req, res) {
             try {
                 const { name, house_url } = JSON.parse(body);
                 const response = await create_room(house_url, name);
+                const status = response.succes ? 201 : 500;
+                res.writeHead(status, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
+                res.end(JSON.stringify(response));
+            } catch (err) {
+                res.writeHead(400, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
+                res.end(JSON.stringify({ error: 'JSON non valido' }));
+            }
+        });
+        return;
+    }
+
+    // Modifica il nome di una stanza (/api/edit_room)
+    if (method === 'POST' && path === '/edit_room') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', async () => {
+            try {
+                const { name, new_name, house_url } = JSON.parse(body);
+                const response = await edit_room(house_url, name, new_name);
                 const status = response.succes ? 201 : 500;
                 res.writeHead(status, { 'Content-Type': 'application/json', 'Content-Security-Policy': 'default-src `self`; script-src `self`; https://www.choreflow.it' });
                 res.end(JSON.stringify(response));

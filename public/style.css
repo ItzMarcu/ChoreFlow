@@ -1239,6 +1239,42 @@ h1 + h2 {
   transform: scale(0.95);
 }
 
+.room-card button.edit-room-btn {
+  appearance: none;
+  background: rgba(101, 163, 13, 0.1);
+  color: var(--color-secondary, #96cd63);
+  border: 1px solid rgba(150, 205, 99, 0.35);
+  border-radius: var(--radius-sm, 8px);
+  
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.room-card button.edit-room-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  transition: transform 0.2s ease;
+}
+
+.room-card button.edit-room-btn:hover {
+  background: rgba(101, 163, 13, 0.25);
+  border-color: var(--color-secondary, #96cd63);
+  color: #b4e884;
+  transform: scale(1.05);
+}
+
+.room-card button.edit-room-btn:active {
+  transform: scale(0.95);
+}
+
 /* ==========================================================================
    Room Creation Modal (Overlay & Card standard - not important)
    ========================================================================== */

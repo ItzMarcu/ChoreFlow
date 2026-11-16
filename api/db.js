@@ -297,3 +297,23 @@ export async function get_rooms(house_url) {
         };
     }
 }
+
+export async function edit_room(house_url, name, new_name) {
+    try {
+        await sql`
+            UPDATE rooms 
+            SET nome = ${new_name}
+            WHERE house_url = ${house_url} AND nome = ${name};
+        `;
+
+        return {
+            succes: true,
+            message: 'Stanza modificata con successo'
+        };
+    } catch (error) {
+        return {
+            succes: false,
+            error: error.message
+        }
+    }
+}
